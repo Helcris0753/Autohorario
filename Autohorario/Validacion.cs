@@ -17,7 +17,7 @@ namespace Autohorario
         {
             List<(string, int)> horario_disponible = Validarhoras(codigo_asignatura, id_seccion, horario_seleccionado);
             horario_disponible = Validarcreditos(horario_disponible, creditos_asignatura);
-            Insercion.insertar(horario_disponible, id_seccion, creditos_asignatura);
+            Insercion.data_insercion(horario_disponible, id_seccion, creditos_asignatura);
         }
         private static List<(string, int)> Validarhoras(string codigo_asignatura, int id_seccion,  List<(string, int)> horario_seleccionado)
         {

@@ -12,22 +12,63 @@ namespace Autohorario
     {
         static private SqlConnection con = Obtencion.con;
 
-        public static void insertar(List<(string, int)> horario_seleccionado, int id_seccion, int creditos_asignatura) {
+        public static void data_insercion(List<(string, int)> horario_seleccionado, int id_seccion, int creditos_asignatura) {
 
+            int hora_inicio = 0;
+            int hora_fin = 0;
             switch (creditos_asignatura)
             {
                 case 1:
-                    int hora_inicio = int.Parse(horario_seleccionado[0].Item1.Substring(0,2));
+                    hora_inicio = int.Parse(horario_seleccionado[0].Item1.Substring(0,2));
+
                     using (SqlCommand cmd = new SqlCommand("ppInsert_hours", con))
                     {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@hora", $"{zero(hora_inicio)}/{zero(hora_inicio+1)}");
-                        cmd.Parameters.AddWithValue("@id_dia", horario_seleccionado[0].Item2);
-                        cmd.Parameters.AddWithValue("@id_seccion", id_seccion);
+                        insertar($"{zero(hora_inicio)}/{zero(hora_inicio + 1)}", horario_seleccionado[0].Item2, id_seccion);
                     }
+                    break;
+                case 2:
+
+                    for (int i = 0; i < horario_seleccionado.Count; i++)
+                    {
+                        hora_inicio = int.Parse(horario_seleccionado[0].Item1.Substring(0, 2));
+                        hora_fin = int.Parse(horario_seleccionado[0].Item1.Substring(3, 2));
+
+                        if ( (hora_fin - hora_inicio) >= creditos_asignatura)
+                        {
+                            insertar($"{zero(hora_inicio)}/{zero(hora_inicio+2)}", horario_seleccionado[i].Item2, id_seccion);
+                            break;
+                        }
+                    }
+                    break;
+                case 3:
+                    for (int i = 0; i < horario_seleccionado.Count; i++)
+                    {
+                        hora_inicio = int.Parse(horario_seleccionado[0].Item1.Substring(0, 2));
+                        hora_fin = int.Parse(horario_seleccionado[0].Item1.Substring(3, 2));
+
+                        if ((hora_fin - hora_inicio) >= creditos_asignatura)
+                        {
+                            insertar($"{zero(hora_inicio)}/{zero(hora_inicio + 2)}", horario_seleccionado[i].Item2, id_seccion);
+                            break;
+                        }
+                    }
+                    break;
+                case 4:
                     break;
                 default:
                     break;
+            }
+        }
+
+        private static void insertar(string hora, int id_dia, int id_seccion) {
+            using (SqlCommand cmd = new SqlCommand("ppInsert_hours", con)) {
+
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("@hora", hora);
+                cmd.Parameters.AddWithValue("@id_dia", id_dia);
+                cmd.Parameters.AddWithValue("@id_seccion", id_seccion);
+                cmd.ExecuteNonQuery();
             }
         }
 
