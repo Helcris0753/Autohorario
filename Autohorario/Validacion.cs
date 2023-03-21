@@ -11,22 +11,23 @@ namespace Autohorario
 {
     internal class Validacion
     {
-        static SqlConnection con = Obtencion.con;
+        static private SqlConnection con = Obtencion.con;
 
         public static void Getdata(string codigo_asignatura, int id_seccion, int id_profesor, int creditos_asignatura, List<(string, int)> horario_seleccionado)
         {
-            //List<(string, int)> horario_disponible = Validarhoras(codigo_asignatura, id_seccion, horario_seleccionado);
-            
+            List<(string, int)> horario_disponible = Validarhoras(codigo_asignatura, id_seccion, horario_seleccionado);
+            horario_disponible = Validarcreditos(horario_disponible, creditos_asignatura);
+            Insercion.insertar(horario_disponible, id_seccion, creditos_asignatura);
         }
         private static List<(string, int)> Validarhoras(string codigo_asignatura, int id_seccion,  List<(string, int)> horario_seleccionado)
         {
+            List<(string, int)> horario_disponible = new List<(string, int)>();
             using (SqlCommand cmd = new SqlCommand("ppCheck_schedule", con))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@codigo_asignatura", codigo_asignatura);
                 cmd.Parameters.AddWithValue("@id_seccion", id_seccion);
-                List<(string, int)> horario_disponible = new List<(string, int)>();
-
+                
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
                     for (int i = 0; i < horario_seleccionado.Count; i++)
@@ -53,14 +54,12 @@ namespace Autohorario
                             }
                             else if (hora_inicio_seleccion < hora_inicio_asignatura && hora_fin_asignatura < hora_fin_seleccion)
                             {
-
+                                instancia_hora = $"{instancia_hora.Substring(0, 2)}/{reader.GetString(0).Substring(0, 2)}";
+                                horario_seleccionado.Add(($"{reader.GetString(0).Substring(3, 2)}/{instancia_hora.Substring(3, 2)}", horario_seleccionado[i].Item2));
                             }
                             
                         }
-                    }
-                    if (horario_disponible.Count == 0)
-                    {
-                        horario_disponible = horario_seleccionado;
+                        horario_disponible.Add((instancia_hora, horario_seleccionado[i].Item2));
                     }
                     return horario_disponible;
                 }
@@ -69,7 +68,7 @@ namespace Autohorario
 
         private static List<(string, int)> Validarcreditos(List<(string, int)> horario_disponible,  int creditos) {
 
-            List<(string, int)> horario_crdito  = new List<(string, int)> ();
+            List<(string, int)> horario_credito  = new List<(string, int)> ();
 
             for (int i = 0; i < horario_disponible.Count; i++)
             {
@@ -78,16 +77,13 @@ namespace Autohorario
 
                 int diferencia_horas = hora_fin - hora_inicio;
 
-                switch (creditos)
+                if (!(diferencia_horas == 1 && diferencia_horas > creditos))
                 {
-                    case 1 : 
-
-                    default:
-                        break;
+                    horario_credito.Add(($"{horario_disponible[i].Item1.Substring(0, 2)}/{horario_disponible[i].Item1.Substring(3, 2)}", horario_disponible[i].Item2));
                 }
             } 
 
-            return horario_disponible;
+            return horario_credito;
         }
     }
 }
