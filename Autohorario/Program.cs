@@ -14,21 +14,30 @@ namespace Autohorario
         internal static SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["horarioConexion"].ConnectionString);
         static void Main(string[] args)
         {
-            con.Open();
-            using (SqlCommand command = new SqlCommand("ppGetasignatura", con))
-            {
-                command.CommandType = CommandType.StoredProcedure;
+            //con.Open();
+            //using (SqlCommand command = new SqlCommand("ppGetasignatura", con))
+            //{
+            //    command.CommandType = CommandType.StoredProcedure;
 
-                SqlDataAdapter adapter = new SqlDataAdapter(command);
-                DataSet ds = new DataSet();
+            //    SqlDataAdapter adapter = new SqlDataAdapter(command);
+            //    DataSet ds = new DataSet();
 
-                adapter.Fill(ds);
+            //    adapter.Fill(ds);
 
-                foreach (DataRow item in ds.Tables[0].Rows)
-                {
-                    List<(string, int)> horario_seleccionado = gethorarios_seleccionado(int.Parse(item[2].ToString()));
-                    Validacion.Getdata(item[0].ToString(), int.Parse(item[1].ToString()), int.Parse(item[2].ToString()), int.Parse(item[3].ToString()), horario_seleccionado);
-                }
+            //    foreach (DataRow item in ds.Tables[0].Rows)
+            //    {
+            //        List<(string, int)> horario_seleccionado = gethorarios_seleccionado(int.Parse(item[2].ToString()));
+            //        Validacion.Getdata(item[0].ToString(), int.Parse(item[1].ToString()), int.Parse(item[2].ToString()), int.Parse(item[3].ToString()), horario_seleccionado);
+            //    }
+            //}
+            List<(string, int)> horario_disponible = new List<(string, int)>();
+            horario_disponible.Add(("jsqajsa", 2));
+            horario_disponible.Add(("jsqajsa", 3));
+            horario_disponible.Add(("jsqajsa", 4));
+
+            for (int i = 0; i < horario_disponible.Count; i++) {
+                horario_disponible.Add((horario_disponible[i].Item1.Substring(0,2), 4));
+                Console.WriteLine(horario_disponible[i].Item1);
             }
         }
         private static List<(string, int)> gethorarios_seleccionado(int id_profesor)
