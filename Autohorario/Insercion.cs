@@ -12,48 +12,50 @@ namespace Autohorario
     {
         static private SqlConnection con = Obtencion.con;
 
-        public static void data_insercion(List<(string, int)> horario_seleccionado, int id_seccion, int creditos_asignatura) {
+        public static void data_insercion(List<(string, int)> horario_disponible, List<(string, int)> horario_dia_disponible, int id_seccion, int creditos_asignatura) {
 
             int hora_inicio = 0;
             int hora_fin = 0;
+
             switch (creditos_asignatura)
             {
                 case 1:
-                    hora_inicio = int.Parse(horario_seleccionado[0].Item1.Substring(0,2));
+                    hora_inicio = int.Parse(horario_disponible[0].Item1.Substring(0,2));
 
                     using (SqlCommand cmd = new SqlCommand("ppInsert_hours", con))
                     {
-                        insertar($"{zero(hora_inicio)}/{zero(hora_inicio + 1)}", horario_seleccionado[0].Item2, id_seccion);
+                        insertar($"{zero(hora_inicio)}/{zero(hora_inicio + 1)}", horario_disponible[0].Item2, id_seccion);
                     }
                     break;
                 case 2:
 
-                    for (int i = 0; i < horario_seleccionado.Count; i++)
+                    for (int i = 0; i < horario_disponible.Count; i++)
                     {
-                        hora_inicio = int.Parse(horario_seleccionado[0].Item1.Substring(0, 2));
-                        hora_fin = int.Parse(horario_seleccionado[0].Item1.Substring(3, 2));
+                        hora_inicio = int.Parse(horario_disponible[0].Item1.Substring(0, 2));
+                        hora_fin = int.Parse(horario_disponible[0].Item1.Substring(3, 2));
 
                         if ( (hora_fin - hora_inicio) >= creditos_asignatura)
                         {
-                            insertar($"{zero(hora_inicio)}/{zero(hora_inicio+2)}", horario_seleccionado[i].Item2, id_seccion);
+                            insertar($"{zero(hora_inicio)}/{zero(hora_inicio+2)}", horario_disponible[i].Item2, id_seccion);
                             break;
                         }
                     }
                     break;
                 case 3:
-                    for (int i = 0; i < horario_seleccionado.Count; i++)
+                    for (int i = 0; i < horario_disponible.Count; i++)
                     {
-                        hora_inicio = int.Parse(horario_seleccionado[0].Item1.Substring(0, 2));
-                        hora_fin = int.Parse(horario_seleccionado[0].Item1.Substring(3, 2));
+                        hora_inicio = int.Parse(horario_disponible[0].Item1.Substring(0, 2));
+                        hora_fin = int.Parse(horario_disponible[0].Item1.Substring(3, 2));
 
                         if ((hora_fin - hora_inicio) >= creditos_asignatura)
                         {
-                            insertar($"{zero(hora_inicio)}/{zero(hora_inicio + 2)}", horario_seleccionado[i].Item2, id_seccion);
+                            insertar($"{zero(hora_inicio)}/{zero(hora_inicio + 2)}", horario_disponible[i].Item2, id_seccion);
                             break;
                         }
                     }
                     break;
                 case 4:
+                        
                     break;
                 default:
                     break;
@@ -78,6 +80,21 @@ namespace Autohorario
                 return $"0{hora}";
             }
             return $"{hora}";
+        }
+
+        private static List<int> dias_disponibilidad(List<(string, int)> horario_disponible) {
+
+            List<int> dias_disponibles = new List<int>();
+            dias_disponibles.Add(horario_disponible[0].Item2);
+
+            for (int i = 1; i < horario_disponible.Count; i++)
+            {
+                if (horario_disponible[i].Item2 != horario_disponible[i-1].Item2)
+                {
+                    dias_disponibles.Add(horario_disponible[i].Item2);
+                }
+            }
+            return dias_disponibles;
         }
     }
 }

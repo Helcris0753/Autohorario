@@ -24,9 +24,11 @@ namespace Autohorario
 
                 adapter.Fill(ds);
 
+                List<(string, int)> horario_seleccionado = new List<(string, int)>();
+
                 foreach (DataRow item in ds.Tables[0].Rows)
                 {
-                    List<(string, int)> horario_seleccionado = gethorarios_seleccionado(int.Parse(item[2].ToString()));
+                    horario_seleccionado = gethorarios_seleccionado(int.Parse(item[2].ToString()));
                     Validacion.Getdata(item[0].ToString(), int.Parse(item[1].ToString()), int.Parse(item[2].ToString()), int.Parse(item[3].ToString()), horario_seleccionado);
                 }
             }

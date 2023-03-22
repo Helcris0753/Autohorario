@@ -15,9 +15,20 @@ namespace Autohorario
 
         public static void Getdata(string codigo_asignatura, int id_seccion, int id_profesor, int creditos_asignatura, List<(string, int)> horario_seleccionado)
         {
+            List<(string, int)> horario_dia_disponible = new List<(string, int)>();
+
+            for (int i = 1; i < 6; i++)
+            {
+                horario_dia_disponible.Add(("07/22", i));
+            }
+
             List<(string, int)> horario_disponible = Validarhoras(codigo_asignatura, id_seccion, horario_seleccionado);
+            horario_dia_disponible = Validarhoras(codigo_asignatura, id_seccion, horario_dia_disponible);
+
             horario_disponible = Validarcreditos(horario_disponible, creditos_asignatura);
-            Insercion.data_insercion(horario_disponible, id_seccion, creditos_asignatura);
+            horario_dia_disponible = Validarcreditos(horario_dia_disponible, creditos_asignatura);
+
+            Insercion.data_insercion(horario_disponible, horario_dia_disponible, id_seccion, creditos_asignatura);
         }
         private static List<(string, int)> Validarhoras(string codigo_asignatura, int id_seccion,  List<(string, int)> horario_seleccionado)
         {
@@ -42,20 +53,22 @@ namespace Autohorario
                             int hora_inicio_asignatura = int.Parse(reader.GetString(0).Substring(0, 2));
                             int hora_fin_asignatura = int.Parse(reader.GetString(0).Substring(3, 2));
                             Console.WriteLine($"{hora_inicio_asignatura}, {hora_fin_asignatura}");
-
-                            if (hora_inicio_asignatura <= hora_inicio_seleccion && hora_fin_asignatura < hora_fin_seleccion)
+                            if (horario_seleccionado[i].Item2 == reader.GetInt32(1))
                             {
-                                instancia_hora = $"{reader.GetString(0).Substring(3, 2)}/{instancia_hora.Substring(3, 2)}";
-                            }
-                            else if (hora_inicio_seleccion < hora_inicio_asignatura && hora_fin_asignatura >= hora_fin_seleccion)
-                            {
-                                //instancia_hora = $"{}/{}";
-                                instancia_hora = $"{instancia_hora.Substring(0, 2)}/{reader.GetString(0).Substring(0, 2)}";
-                            }
-                            else if (hora_inicio_seleccion < hora_inicio_asignatura && hora_fin_asignatura < hora_fin_seleccion)
-                            {
-                                instancia_hora = $"{instancia_hora.Substring(0, 2)}/{reader.GetString(0).Substring(0, 2)}";
-                                horario_seleccionado.Add(($"{reader.GetString(0).Substring(3, 2)}/{instancia_hora.Substring(3, 2)}", horario_seleccionado[i].Item2));
+                                if (hora_inicio_asignatura <= hora_inicio_seleccion && hora_fin_asignatura < hora_fin_seleccion)
+                                {
+                                    instancia_hora = $"{reader.GetString(0).Substring(3, 2)}/{instancia_hora.Substring(3, 2)}";
+                                }
+                                else if (hora_inicio_seleccion < hora_inicio_asignatura && hora_fin_asignatura >= hora_fin_seleccion)
+                                {
+                                    //instancia_hora = $"{}/{}";
+                                    instancia_hora = $"{instancia_hora.Substring(0, 2)}/{reader.GetString(0).Substring(0, 2)}";
+                                }
+                                else if (hora_inicio_seleccion < hora_inicio_asignatura && hora_fin_asignatura < hora_fin_seleccion)
+                                {
+                                    instancia_hora = $"{instancia_hora.Substring(0, 2)}/{reader.GetString(0).Substring(0, 2)}";
+                                    horario_seleccionado.Add(($"{reader.GetString(0).Substring(3, 2)}/{instancia_hora.Substring(3, 2)}", horario_seleccionado[i].Item2));
+                                }
                             }
                             
                         }
@@ -79,7 +92,7 @@ namespace Autohorario
 
                 if (!(diferencia_horas == 1 && diferencia_horas > creditos))
                 {
-                    horario_credito.Add(($"{horario_disponible[i].Item1.Substring(0, 2)}/{horario_disponible[i].Item1.Substring(3, 2)}", horario_disponible[i].Item2));
+                    horario_credito.Add(($"{horario_disponible[i].Item1}", horario_disponible[i].Item2));
                 }
             } 
 
