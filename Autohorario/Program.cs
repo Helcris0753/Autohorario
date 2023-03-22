@@ -14,22 +14,40 @@ namespace Autohorario
         internal static SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["horarioConexion"].ConnectionString);
         static void Main(string[] args)
         {
-            con.Open();
-            using (SqlCommand command = new SqlCommand("ppGetasignatura", con))
+            //con.Open();
+            //using (SqlCommand command = new SqlCommand("ppGetasignatura", con))
+            //{
+            //    command.CommandType = CommandType.StoredProcedure;
+
+            //    SqlDataAdapter adapter = new SqlDataAdapter(command);
+            //    DataSet ds = new DataSet();
+
+            //    adapter.Fill(ds);
+
+            //    List<(string, int)> horario_seleccionado = new List<(string, int)>();
+
+            //    foreach (DataRow item in ds.Tables[0].Rows)
+            //    {
+            //        horario_seleccionado = gethorarios_seleccionado(int.Parse(item[2].ToString()));
+            //        Validacion.Getdata(item[0].ToString(), int.Parse(item[1].ToString()), int.Parse(item[2].ToString()), int.Parse(item[3].ToString()), horario_seleccionado);
+            //    }
+            //}
+            List<int> list = new List<int>();
+            list.Add(1);
+            list.Add(1);
+            list.Add(2);
+            list.Add(2);
+            list.Add(3);
+            list.Add(4);
+            list.Add(5);
+            for (int i = 0; i < list.Count; i++)
             {
-                command.CommandType = CommandType.StoredProcedure;
-
-                SqlDataAdapter adapter = new SqlDataAdapter(command);
-                DataSet ds = new DataSet();
-
-                adapter.Fill(ds);
-
-                List<(string, int)> horario_seleccionado = new List<(string, int)>();
-
-                foreach (DataRow item in ds.Tables[0].Rows)
+                if (i != 0)
                 {
-                    horario_seleccionado = gethorarios_seleccionado(int.Parse(item[2].ToString()));
-                    Validacion.Getdata(item[0].ToString(), int.Parse(item[1].ToString()), int.Parse(item[2].ToString()), int.Parse(item[3].ToString()), horario_seleccionado);
+                    if (list[i] != list[i - 1])
+                    {
+                        Console.WriteLine("Aqui estoy" + i);
+                    }
                 }
             }
 
