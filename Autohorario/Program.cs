@@ -29,6 +29,7 @@ namespace Autohorario
                 foreach (DataRow item in ds.Tables[0].Rows)
                 {
                     horario_seleccionado = gethorarios_seleccionado(int.Parse(item[2].ToString()));
+                    //Console.WriteLine($"{item[0].ToString()}, {int.Parse(item[1].ToString())}, {int.Parse(item[2].ToString())}, {int.Parse(item[3].ToString())}, {horario_seleccionado}");
                     Validacion.Getdata(item[0].ToString(), int.Parse(item[1].ToString()), int.Parse(item[2].ToString()), int.Parse(item[3].ToString()), horario_seleccionado);
                 }
             }

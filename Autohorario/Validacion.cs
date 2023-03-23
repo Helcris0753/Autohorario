@@ -15,6 +15,7 @@ namespace Autohorario
 
         public static void Getdata(string codigo_asignatura, int id_seccion, int id_profesor, int creditos_asignatura, List<(string, int)> horario_seleccionado)
         {
+
             List<(string, int)> horario_dia_disponible = new List<(string, int)>();
 
             for (int i = 1; i < 6; i++)
@@ -32,9 +33,11 @@ namespace Autohorario
         }
         private static List<(string, int)> Validarhoras(string codigo_asignatura, int id_seccion,  List<(string, int)> horario_seleccionado)
         {
+            //Console.WriteLine(id_seccion);
             List<(string, int)> horario_disponible = new List<(string, int)>();
             using (SqlCommand cmd = new SqlCommand("ppCheck_schedule", con))
             {
+                //Console.WriteLine(id_seccion);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@codigo_asignatura", codigo_asignatura);
                 cmd.Parameters.AddWithValue("@id_seccion", id_seccion);
@@ -53,8 +56,9 @@ namespace Autohorario
                         {
                             if (horario_seleccionado[i].Item2 == reader.GetInt32(1))
                             {
-                                int hora_inicio_asignatura = int.Parse(reader.GetString(0).Substring(0, 2));
-                                int hora_fin_asignatura = int.Parse(reader.GetString(0).Substring(3, 2));
+                                //Console.WriteLine(reader.GetString(0));
+                                int hora_inicio_asignatura = int.Parse((reader.GetString(0)).Substring(0, 2));
+                                int hora_fin_asignatura = int.Parse((reader.GetString(0)).Substring(3, 2));
                                 if (hora_inicio_asignatura <= hora_inicio_seleccion && hora_fin_asignatura < hora_fin_seleccion)
                                 {
                                     instancia_hora = $"{Insercion.zero(hora_fin_asignatura)}/{Insercion.zero(hora_fin_seleccion)}";
@@ -66,12 +70,15 @@ namespace Autohorario
                                 }
                                 else if (hora_inicio_seleccion < hora_inicio_asignatura && hora_fin_asignatura < hora_fin_seleccion)
                                 {
+                                    //Console.WriteLine("treu");
                                     instancia_hora = $"{instancia_hora.Substring(0, 2)}/{reader.GetString(0).Substring(0, 2)}";
                                     horario_seleccionado.Add(($"{reader.GetString(0).Substring(3, 2)}/{instancia_hora.Substring(3, 2)}", horario_seleccionado[i].Item2));
+                                    //Console.WriteLine($"{reader.GetString(0).Substring(3, 2)}/{instancia_hora.Substring(3, 2)}, {horario_seleccionado[i].Item2}");
                                 }
                             }
                             
                         }
+                        //Console.WriteLine($"{instancia_hora}  {id_seccion}");
                         horario_disponible.Add((instancia_hora, horario_seleccionado[i].Item2));
                     }
                     return horario_disponible;

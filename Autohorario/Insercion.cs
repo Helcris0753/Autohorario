@@ -65,8 +65,9 @@ namespace Autohorario
                 hora_inicio = int.Parse(horario_disponible[i].Item1.Substring(0, 2));
                 hora_fin = int.Parse(horario_disponible[i].Item1.Substring(3, 2));
 
-                if ((hora_fin - hora_inicio) >= creditos_asignatura)
+                if ((hora_fin - hora_inicio) >= creditos_asignatura && hora_fin < 23)
                 {
+                    //Console.WriteLine($"{zero(hora_inicio)}/{zero(hora_inicio + horas)}");
                     insertar($"{zero(hora_inicio)}/{zero(hora_inicio + horas)}", horario_disponible[i].Item2, id_seccion);
                     return true;
                 }
@@ -83,7 +84,7 @@ namespace Autohorario
                 hora_inicio = int.Parse(horario_disponible[i].Item1.Substring(0, 2));
                 hora_fin = int.Parse(horario_disponible[i].Item1.Substring(3, 2));
 
-                if ((hora_fin - hora_inicio) >= 2)
+                if ((hora_fin - hora_inicio) >= 2 && hora_fin < 23)
                 {
                     for (int j = i; j < horario_disponible.Count; j++)
                     {
@@ -92,9 +93,10 @@ namespace Autohorario
                             int hora_inicio2 = int.Parse(horario_disponible[j].Item1.Substring(0, 2));
                             int hora_fin2 = int.Parse(horario_disponible[j].Item1.Substring(3, 2));
 
-                            if ((hora_fin2 - hora_inicio2) >= 2)
+                            if ((hora_fin2 - hora_inicio2) >= 2 && hora_fin2 < 23)
                             {
-                                insertar($"{hora_inicio2}/{hora_inicio2 + 2}", horario_disponible[j].Item2, id_seccion);
+                                Console.WriteLine($"{zero(hora_inicio2)}/{zero(hora_inicio2 + 2)}");
+                                insertar($"{zero(hora_inicio2)}/{zero(hora_inicio2 + 2)}", horario_disponible[j].Item2, id_seccion);
                                 validar_primero = true;
                                 break;
                             }
@@ -102,13 +104,15 @@ namespace Autohorario
                     }
                     if (validar_primero)
                     {
-                        insertar($"{hora_inicio}/{hora_fin + 2}", horario_disponible[i].Item2, id_seccion);
+                        Console.WriteLine($"{zero(hora_inicio)}/{zero(hora_inicio + 2)}");
+                        insertar($"{zero(hora_inicio)}/{zero(hora_inicio + 2)}", horario_disponible[i].Item2, id_seccion);
                         return true;
                     }
                 }
-                if ((hora_fin - hora_inicio) >= 4 && validar_primero == false)
+                if ((hora_fin - hora_inicio) >= 4 && validar_primero == false && hora_fin < 23)
                 {
-                    insertar($"{hora_inicio}/{hora_inicio + 4}", horario_disponible[i].Item2, id_seccion);
+                    Console.WriteLine($"{zero(hora_inicio)}/{zero(hora_inicio + 4)}");
+                    insertar($"{zero(hora_inicio)}/{zero(hora_inicio + 4)}", horario_disponible[i].Item2, id_seccion);
                     return true;
                 }
             }
@@ -118,6 +122,7 @@ namespace Autohorario
         private static void insertar(string hora, int id_dia, int id_seccion) {
             using (SqlCommand cmd = new SqlCommand("ppInsert_hours", con)) {
 
+                //Console.WriteLine($"{hora}  {id_dia}  {id_seccion}");
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 cmd.Parameters.AddWithValue("@hora", hora);
