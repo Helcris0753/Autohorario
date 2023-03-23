@@ -14,7 +14,6 @@ namespace Autohorario
 
         public static void data_insercion(List<(string, int)> horario_disponible, List<(string, int)> horario_dia_disponible, int id_seccion, int creditos_asignatura) {
 
-            
             switch (creditos_asignatura)
             {
                 case 1:
@@ -93,7 +92,7 @@ namespace Autohorario
                             int hora_inicio2 = int.Parse(horario_disponible[j].Item1.Substring(0, 2));
                             int hora_fin2 = int.Parse(horario_disponible[j].Item1.Substring(3, 2));
 
-                            if ((hora_fin2 - hora_inicio2) >= 2 && (hora_fin2 - hora_inicio2) < 4)
+                            if ((hora_fin2 - hora_inicio2) >= 2)
                             {
                                 insertar($"{hora_inicio2}/{hora_inicio2 + 2}", horario_disponible[j].Item2, id_seccion);
                                 validar_primero = true;
@@ -107,7 +106,7 @@ namespace Autohorario
                         return true;
                     }
                 }
-                else if ((hora_fin - hora_inicio) >= 4)
+                if ((hora_fin - hora_inicio) >= 4 && validar_primero == false)
                 {
                     insertar($"{hora_inicio}/{hora_inicio + 4}", horario_disponible[i].Item2, id_seccion);
                     return true;
@@ -128,30 +127,12 @@ namespace Autohorario
             }
         }
 
-        private static string zero(int hora) {
+        public static string zero(int hora) {
             if (hora < 10)
             {
                 return $"0{hora}";
             }
             return $"{hora}";
         }
-
-        private static List<int> dias_disponibilidad(List<(string, int)> horario_disponible)
-        {
-
-            List<int> dias_disponibles = new List<int>();
-            dias_disponibles.Add(horario_disponible[0].Item2);
-
-            for (int i = 1; i < horario_disponible.Count; i++)
-            {
-                if (horario_disponible[i].Item2 != horario_disponible[i - 1].Item2)
-                {
-                    dias_disponibles.Add(horario_disponible[i].Item2);
-                }
-            }
-            return dias_disponibles;
-        }
-
-
     }
 }

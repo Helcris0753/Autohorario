@@ -41,28 +41,28 @@ namespace Autohorario
                 
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
+                    string instancia_hora = null;
                     for (int i = 0; i < horario_seleccionado.Count; i++)
                     {
-                        string instancia_hora = horario_seleccionado[i].Item1;
+                        instancia_hora = horario_seleccionado[i].Item1;
 
                         int hora_inicio_seleccion = int.Parse(instancia_hora.Substring(0,2));
                         int hora_fin_seleccion = int.Parse(instancia_hora.Substring(3, 2));
 
                         while (reader.Read())
                         {
-                            int hora_inicio_asignatura = int.Parse(reader.GetString(0).Substring(0, 2));
-                            int hora_fin_asignatura = int.Parse(reader.GetString(0).Substring(3, 2));
-                            Console.WriteLine($"{hora_inicio_asignatura}, {hora_fin_asignatura}");
                             if (horario_seleccionado[i].Item2 == reader.GetInt32(1))
                             {
+                                int hora_inicio_asignatura = int.Parse(reader.GetString(0).Substring(0, 2));
+                                int hora_fin_asignatura = int.Parse(reader.GetString(0).Substring(3, 2));
                                 if (hora_inicio_asignatura <= hora_inicio_seleccion && hora_fin_asignatura < hora_fin_seleccion)
                                 {
-                                    instancia_hora = $"{reader.GetString(0).Substring(3, 2)}/{instancia_hora.Substring(3, 2)}";
+                                    instancia_hora = $"{Insercion.zero(hora_fin_asignatura)}/{Insercion.zero(hora_fin_seleccion)}";
                                 }
                                 else if (hora_inicio_seleccion < hora_inicio_asignatura && hora_fin_asignatura >= hora_fin_seleccion)
                                 {
                                     //instancia_hora = $"{}/{}";
-                                    instancia_hora = $"{instancia_hora.Substring(0, 2)}/{reader.GetString(0).Substring(0, 2)}";
+                                    instancia_hora = $"{Insercion.zero(hora_inicio_seleccion)}/{Insercion.zero(hora_fin_asignatura)}";
                                 }
                                 else if (hora_inicio_seleccion < hora_inicio_asignatura && hora_fin_asignatura < hora_fin_seleccion)
                                 {
