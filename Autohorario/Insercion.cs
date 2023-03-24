@@ -95,7 +95,7 @@ namespace Autohorario
 
                             if ((hora_fin2 - hora_inicio2) >= 2 && hora_fin2 < 23)
                             {
-                                Console.WriteLine($"{zero(hora_inicio2)}/{zero(hora_inicio2 + 2)}");
+                                //Console.WriteLine($"{zero(hora_inicio2)}/{zero(hora_inicio2 + 2)}");
                                 insertar($"{zero(hora_inicio2)}/{zero(hora_inicio2 + 2)}", horario_disponible[j].Item2, id_seccion);
                                 validar_primero = true;
                                 break;
@@ -104,14 +104,14 @@ namespace Autohorario
                     }
                     if (validar_primero)
                     {
-                        Console.WriteLine($"{zero(hora_inicio)}/{zero(hora_inicio + 2)}");
+                        //Console.WriteLine($"{zero(hora_inicio)}/{zero(hora_inicio + 2)}");
                         insertar($"{zero(hora_inicio)}/{zero(hora_inicio + 2)}", horario_disponible[i].Item2, id_seccion);
                         return true;
                     }
                 }
                 if ((hora_fin - hora_inicio) >= 4 && validar_primero == false && hora_fin < 23)
                 {
-                    Console.WriteLine($"{zero(hora_inicio)}/{zero(hora_inicio + 4)}");
+                    //Console.WriteLine($"{zero(hora_inicio)}/{zero(hora_inicio + 4)}");
                     insertar($"{zero(hora_inicio)}/{zero(hora_inicio + 4)}", horario_disponible[i].Item2, id_seccion);
                     return true;
                 }
