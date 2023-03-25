@@ -28,15 +28,12 @@ namespace Autohorario
 
                 foreach (DataRow item in ds.Tables[0].Rows)
                 {
-                    horario_seleccionado = gethorarios_seleccionado(int.Parse(item[2].ToString()));
-                    Validacion.Getdata(item[0].ToString(), int.Parse(item[1].ToString()), int.Parse(item[2].ToString()), int.Parse(item[3].ToString()), horario_seleccionado);
+                    horario_seleccionado = gethorarios_seleccionado(int.Parse(item[2].ToString()), int.Parse(item[4].ToString()));
+                    Validacion.Getdata(item[0].ToString(), int.Parse(item[1].ToString()), int.Parse(item[3].ToString()), horario_seleccionado);
                 }
             }
-
-
-
         }
-        private static List<(string, int)> gethorarios_seleccionado(int id_profesor)
+        private static List<(string, int)> gethorarios_seleccionado(int id_profesor, int id_modalidad)
         {
             List<(string, int)> horario_seleccionado = new List<(string, int)>();
 
@@ -44,6 +41,7 @@ namespace Autohorario
             {
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@id_profesor", id_profesor);
+                cmd.Parameters.AddWithValue("@id_modalidad", id_modalidad);
 
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
