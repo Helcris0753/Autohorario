@@ -135,7 +135,7 @@ namespace Autohorario
                 {
                     Console.WriteLine($"{horario_disponible[i].Item1} {horario_disponible[i].Item2}");
                 }
-                Console.ReadKey();
+                //Console.ReadKey();
 
                 return horario_disponible;
             }
