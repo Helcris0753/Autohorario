@@ -16,21 +16,7 @@ namespace Autohorario
             switch (creditos_asignatura)
             {
                 case 0:
-
-                    valida_insercion = validar_insercion(horario_disponible, id_seccion, 2, 1);
-                    if (!(valida_insercion[0].Item1))
-                    {
-                        valida_insercion = validar_insercion(horario_disponible, id_seccion, 2, 2);
-                    }
-                    break;
                 case 1:
-
-                    valida_insercion = validar_insercion(horario_disponible, id_seccion, 2, 1);
-                    if (!(valida_insercion[0].Item1))
-                    {
-                        valida_insercion = validar_insercion(horario_disponible, id_seccion, 2, 2);
-                    }
-                    break;
                 case 2:
 
                     valida_insercion = validar_insercion(horario_disponible, id_seccion, 2, 1);
@@ -48,20 +34,6 @@ namespace Autohorario
                     }
                     break;
                 case 4:
-
-                    valida_insercion = validar_insercion(horario_disponible, id_seccion, 2, 1);
-                    if (!(valida_insercion[0].Item1))
-                    {
-                        valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 2, 2);
-                    }
-
-                    dia1 = valida_insercion[0].Item2;
-                    valida_insercion = validar_insercion(horario_disponible, id_seccion, 2, 1, dia1);
-                    if (!(valida_insercion[0].Item1))
-                    {
-                        valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 2, 1, dia1);
-                    }
-                    break;
                 case 5:
                     valida_insercion = validar_insercion(horario_disponible, id_seccion, 2, 1);
                     if (!(valida_insercion[0].Item1))
@@ -76,11 +48,14 @@ namespace Autohorario
                         valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 2, 2, dia1);
                     }
 
-                    dia2 = valida_insercion[0].Item2;
-                    valida_insercion = validar_insercion(horario_disponible, id_seccion, 1, 1, dia1, dia2);
-                    if (!(valida_insercion[0].Item1))
+                    if (creditos_asignatura == 5)
                     {
-                        valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 1, 2, dia1, dia2);
+                        dia2 = valida_insercion[0].Item2;
+                        valida_insercion = validar_insercion(horario_disponible, id_seccion, 1, 1, dia1, dia2);
+                        if (!(valida_insercion[0].Item1))
+                        {
+                            valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 1, 2, dia1, dia2);
+                        }
                     }
                     break;
                 default:
@@ -98,8 +73,6 @@ namespace Autohorario
 
                 if (horario[i].Item2 != dia1 && horario[i].Item2 != dia2)
                 {
-                    Console.WriteLine($"{horario[i].Item2} {id_seccion} {estado_horas} {zero(hora_inicio)}/{zero(hora_inicio + horas)}");
-                    Console.ReadKey();
                     insertar(horario[i].Item2, id_seccion, estado_horas, $"{zero(hora_inicio)}/{zero(hora_inicio + horas)}");
                     validar_insercion[0] = (true, horario[i].Item2);
                     return validar_insercion;
