@@ -59,6 +59,7 @@ namespace Autohorario
                     }
                     break;
                 default:
+                    insertar(1, id_seccion, 3);
                     break;
             }
         }
