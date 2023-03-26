@@ -19,10 +19,10 @@ namespace Autohorario
                 horario_dia_disponible.Add(("07/22", i));
             }
             horario_disponible = Validarhoras(codigo_asignatura, id_seccion, horario_seleccionado);
-            horario_disponible = Validarcreditos(horario_disponible, creditos_asignatura);
+            horario_disponible = horario_disponible.Where(horario => int.Parse(horario.Item1.Substring(3, 2)) - int.Parse(horario.Item1.Substring(0, 2)) >= 2).ToList(); ;
 
             horario_dia_disponible = Validarhoras(codigo_asignatura, id_seccion, horario_dia_disponible);
-            horario_dia_disponible = Validarcreditos(horario_dia_disponible, creditos_asignatura);
+            horario_dia_disponible = horario_dia_disponible.Where(horario => int.Parse(horario.Item1.Substring(3, 2)) - int.Parse(horario.Item1.Substring(0, 2)) >= 2).ToList();
 
             //if (codigo_asignatura == "IDS202l")
             //{
@@ -130,7 +130,7 @@ namespace Autohorario
             }
         }
 
-        private static List<(string, int)> Validarcreditos(List<(string, int)> horario_disponible, int creditos)
+        private static List<(string, int)> Validarcreditos(List<(string, int)> horario_disponible)
         {
 
             //    List<(string, int)> horario_credito = new List<(string, int)>();
