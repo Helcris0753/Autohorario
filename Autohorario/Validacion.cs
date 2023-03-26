@@ -140,9 +140,7 @@ namespace Autohorario
                 int hora_inicio = int.Parse(horario_disponible[i].Item1.Substring(0, 2));
                 int hora_fin = int.Parse(horario_disponible[i].Item1.Substring(3, 2)); ;
 
-                int diferencia_horas = hora_fin - hora_inicio;
-
-                if (diferencia_horas >= 2)
+                if ((hora_fin - hora_inicio) >= 2)
                 {
                     horario_credito.Add(($"{horario_disponible[i].Item1}", horario_disponible[i].Item2));
                 }
