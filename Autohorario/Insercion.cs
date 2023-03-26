@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Autohorario
 {
@@ -12,7 +8,8 @@ namespace Autohorario
     {
         static private SqlConnection con = Obtencion.con;
 
-        public static void data_insercion(List<(string, int)> horario_disponible, List<(string, int)> horario_dia_disponible, int id_seccion, int creditos_asignatura) {
+        public static void data_insercion(List<(string, int)> horario_disponible, List<(string, int)> horario_dia_disponible, int id_seccion, int creditos_asignatura)
+        {
 
             switch (creditos_asignatura)
             {
@@ -50,7 +47,7 @@ namespace Autohorario
                 case 5:
                     if (!(validar_insercion_4creditos(horario_disponible, id_seccion, 1)))
                     {
-                        validar_insercion_4creditos(horario_dia_disponible, id_seccion, 2) ;
+                        validar_insercion_4creditos(horario_dia_disponible, id_seccion, 2);
                     }
                     break;
                 default:
@@ -77,46 +74,43 @@ namespace Autohorario
             return false;
         }
 
-        private static bool validar_insercion_4creditos(List<(string, int)> horario_disponible, int id_seccion, int estado_hora) {
+        private static bool validar_insercion_4creditos(List<(string, int)> horario_disponible, int id_seccion, int estado_hora)
+        {
             bool validar_primero = false;
-            int hora_inicio = 0, hora_fin = 0;
+            int hora_inicio = 0;
 
             for (int i = 0; i < horario_disponible.Count; i++)
             {
                 hora_inicio = int.Parse(horario_disponible[i].Item1.Substring(0, 2));
-                hora_fin = int.Parse(horario_disponible[i].Item1.Substring(3, 2));
 
-                if ((hora_fin - hora_inicio) >= 2 && hora_fin < 23)
+                for (int j = i; j < horario_disponible.Count; j++)
                 {
-                    for (int j = i; j < horario_disponible.Count; j++)
+                    if (horario_disponible[i].Item2 != horario_disponible[j].Item2)
                     {
-                        if (horario_disponible[i].Item2 != horario_disponible[j].Item2)
-                        {
-                            int hora_inicio2 = int.Parse(horario_disponible[j].Item1.Substring(0, 2));
-                            int hora_fin2 = int.Parse(horario_disponible[j].Item1.Substring(3, 2));
+                        int hora_inicio2 = int.Parse(horario_disponible[j].Item1.Substring(0, 2));
 
-                            if ((hora_fin2 - hora_inicio2) >= 2 && hora_fin2 < 23)
-                            {
-                                //Console.WriteLine($"{zero(hora_inicio2)}/{zero(hora_inicio2 + 2)}");
-                                insertar(horario_disponible[j].Item2, id_seccion, estado_hora, $"{zero(hora_inicio2)}/{zero(hora_inicio2 + 2)}");
-                                validar_primero = true;
-                                break;
-                            }
-                        }
-                    }
-                    if (validar_primero)
-                    {
-                        //Console.WriteLine($"{zero(hora_inicio)}/{zero(hora_inicio + 2)}");
-                        insertar(horario_disponible[i].Item2, id_seccion, estado_hora, $"{zero(hora_inicio)}/{zero(hora_inicio + 2)}");
-                        return true;
+                        //Console.WriteLine($"{zero(hora_inicio2)}/{zero(hora_inicio2 + 2)}");
+                        insertar(horario_disponible[j].Item2, id_seccion, estado_hora, $"{zero(hora_inicio2)}/{zero(hora_inicio2 + 2)}");
+                        validar_primero = true;
+                        break;
+
                     }
                 }
+                if (validar_primero)
+                {
+                    //Console.WriteLine($"{zero(hora_inicio)}/{zero(hora_inicio + 2)}");
+                    insertar(horario_disponible[i].Item2, id_seccion, estado_hora, $"{zero(hora_inicio)}/{zero(hora_inicio + 2)}");
+                    return true;
+                }
+
             }
             return false;
 
         }
-        private static void insertar(int id_dia, int id_seccion, int estado_hora, string hora = null) {
-            using (SqlCommand cmd = new SqlCommand("ppInsert_hours", con)) {
+        private static void insertar(int id_dia, int id_seccion, int estado_hora, string hora = null)
+        {
+            using (SqlCommand cmd = new SqlCommand("ppInsert_hours", con))
+            {
 
                 //Console.WriteLine($"{hora}  {id_dia}  {id_seccion}");
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -129,7 +123,8 @@ namespace Autohorario
             }
         }
 
-        public static string zero(int hora) {
+        public static string zero(int hora)
+        {
             if (hora < 10)
             {
                 return $"0{hora}";

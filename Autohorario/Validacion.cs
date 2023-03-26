@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Diagnostics.Eventing.Reader;
-using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Autohorario
 {
@@ -14,7 +8,7 @@ namespace Autohorario
     {
         static private SqlConnection con = Obtencion.con;
 
-        public static void Getdata(string codigo_asignatura, int id_seccion,int creditos_asignatura, List<(string, int)> horario_seleccionado)
+        public static void Getdata(string codigo_asignatura, int id_seccion, int creditos_asignatura, List<(string, int)> horario_seleccionado)
         {
 
             List<(string, int)> horario_dia_disponible = new List<(string, int)>();
@@ -23,30 +17,30 @@ namespace Autohorario
             {
                 horario_dia_disponible.Add(("07/22", i));
             }
-            
+
             List<(string, int)> horario_disponible = Validarhoras(codigo_asignatura, id_seccion, horario_seleccionado);
             horario_dia_disponible = Validarhoras(codigo_asignatura, id_seccion, horario_dia_disponible);
 
             horario_disponible = Validarcreditos(horario_disponible, creditos_asignatura);
             horario_dia_disponible = Validarcreditos(horario_dia_disponible, creditos_asignatura);
 
-            if (codigo_asignatura == "IDS202l")
-            {
-                for (int i = 0; i < horario_disponible.Count; i++)
-                {
-                    Console.WriteLine($"{horario_disponible[i].Item1} {horario_disponible[i].Item2}");
-                }
-                Console.WriteLine("jaolsijaoihsahsakljs");
-                for (int i = 0; i < horario_dia_disponible.Count; i++)
-                {
-                    Console.WriteLine($"{horario_dia_disponible[i].Item1} {horario_dia_disponible[i].Item2}");
-                }
-            }
-            
+            //if (codigo_asignatura == "IDS202l")
+            //{
+            //    for (int i = 0; i < horario_disponible.Count; i++)
+            //    {
+            //        Console.WriteLine($"{horario_disponible[i].Item1} {horario_disponible[i].Item2}");
+            //    }
+            //    Console.WriteLine("jaolsijaoihsahsakljs");
+            //    for (int i = 0; i < horario_dia_disponible.Count; i++)
+            //    {
+            //        Console.WriteLine($"{horario_dia_disponible[i].Item1} {horario_dia_disponible[i].Item2}");
+            //    }
+            //}
+
 
             Insercion.data_insercion(horario_disponible, horario_dia_disponible, id_seccion, creditos_asignatura);
         }
-        private static List<(string, int)> Validarhoras(string codigo_asignatura, int id_seccion,  List<(string, int)> horario_seleccionado)
+        private static List<(string, int)> Validarhoras(string codigo_asignatura, int id_seccion, List<(string, int)> horario_seleccionado)
         {
             string instancia_hora = null;
             int hora_inicio_seleccion, hora_fin_seleccion, hora_inicio_asignatura, hora_fin_asignatura;
@@ -65,15 +59,7 @@ namespace Autohorario
                         horas_ocupadas.Add((reader.GetString(0), reader.GetInt32(1)));
                     }
                 }
-                //Console.WriteLine(codigo_asignatura);
-                if (codigo_asignatura == "geere") {
-                    Console.WriteLine("aqui empieza");
-                    for (int i = 0; i < horario_seleccionado.Count; i++)
-                    {
-                        Console.WriteLine($"{horario_seleccionado[i].Item1} {horario_seleccionado[i].Item2}");
-                    }
-                }
-                    
+
                 for (int i = 0; i < horario_disponible.Count; i++)
                 {
                     instancia_hora = horario_disponible[i].Item1;
@@ -84,14 +70,14 @@ namespace Autohorario
                     for (int j = 0; j < horas_ocupadas.Count; j++)
                     {
 
-                        hora_inicio_asignatura = int.Parse(horas_ocupadas[j].Item1.Substring(0,2));
-                         hora_fin_asignatura = int.Parse(horas_ocupadas[j].Item1.Substring(3, 2));
+                        hora_inicio_asignatura = int.Parse(horas_ocupadas[j].Item1.Substring(0, 2));
+                        hora_fin_asignatura = int.Parse(horas_ocupadas[j].Item1.Substring(3, 2));
 
-                        if (horario_disponible[i].Item2 == horas_ocupadas[j].Item2 )
+                        if (horario_disponible[i].Item2 == horas_ocupadas[j].Item2)
                         {
                             if (hora_inicio_asignatura <= hora_inicio_seleccion && hora_inicio_seleccion < hora_fin_asignatura && hora_fin_asignatura != hora_fin_seleccion)
                             {
-                                
+
                                 horario_disponible[i] = ($"{Insercion.zero(hora_fin_asignatura)}/{Insercion.zero(hora_fin_seleccion)}", horario_disponible[i].Item2);
                                 instancia_hora = horario_disponible[i].Item1;
                                 hora_inicio_seleccion = int.Parse(instancia_hora.Substring(0, 2));
@@ -99,14 +85,14 @@ namespace Autohorario
                             }
                             else if (hora_inicio_asignatura <= hora_fin_seleccion && hora_fin_seleccion < hora_fin_asignatura && hora_inicio_asignatura != hora_inicio_seleccion)
                             {
-                                
+
                                 horario_disponible[i] = ($"{Insercion.zero(hora_inicio_seleccion)}/{Insercion.zero(hora_inicio_asignatura)}", horario_disponible[i].Item2);
                                 instancia_hora = horario_disponible[i].Item1;
                                 hora_inicio_seleccion = int.Parse(instancia_hora.Substring(0, 2));
                                 hora_fin_seleccion = int.Parse(instancia_hora.Substring(3, 2));
 
                             }
-                            else if (hora_inicio_asignatura >= hora_inicio_seleccion && hora_fin_asignatura <= hora_fin_seleccion) 
+                            else if (hora_inicio_asignatura >= hora_inicio_seleccion && hora_fin_asignatura <= hora_fin_seleccion)
                             {
                                 if (hora_inicio_asignatura == hora_inicio_seleccion)
                                 {
@@ -130,43 +116,28 @@ namespace Autohorario
                                     hora_inicio_seleccion = int.Parse(instancia_hora.Substring(0, 2));
                                     hora_fin_seleccion = int.Parse(instancia_hora.Substring(3, 2));
                                 }
-                                
-                                
+
+
                             }
-                             if (hora_inicio_seleccion == hora_inicio_asignatura && hora_fin_asignatura == hora_fin_seleccion)
+                            if (hora_inicio_seleccion == hora_inicio_asignatura && hora_fin_asignatura == hora_fin_seleccion)
                             {
                                 horario_disponible.Remove((instancia_hora, horario_disponible[i].Item2));
                             }
                         }
                     }
                 }
-                if (codigo_asignatura == "sds")
-                {
-                    Console.WriteLine("aqui empieza horas ocupadas");
-                    for (int i = 0; i < horas_ocupadas.Count; i++)
-                    {
-                        Console.WriteLine($"{horas_ocupadas[i].Item1} {horas_ocupadas[i].Item2}");
-                    }
-                    Console.WriteLine("Aqui el horario disponible");
-                    for (int i = 0; i < horario_disponible.Count; i++)
-                    {
-                        Console.WriteLine($"{horario_disponible[i].Item1} {horario_disponible[i].Item2}");
-                    }
-                    Console.ReadKey();
-                }
-
-
                 return horario_disponible;
             }
         }
 
-        private static List<(string, int)> Validarcreditos(List<(string, int)> horario_disponible,  int creditos) {
+        private static List<(string, int)> Validarcreditos(List<(string, int)> horario_disponible, int creditos)
+        {
 
-            List<(string, int)> horario_credito  = new List<(string, int)> ();
+            List<(string, int)> horario_credito = new List<(string, int)>();
 
             for (int i = 0; i < horario_disponible.Count; i++)
             {
-                int hora_inicio = int.Parse(horario_disponible[i].Item1.Substring(0,2));
+                int hora_inicio = int.Parse(horario_disponible[i].Item1.Substring(0, 2));
                 int hora_fin = int.Parse(horario_disponible[i].Item1.Substring(3, 2)); ;
 
                 int diferencia_horas = hora_fin - hora_inicio;
