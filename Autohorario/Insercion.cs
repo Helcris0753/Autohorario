@@ -83,6 +83,12 @@ namespace Autohorario
 
         private static void insertar(int id_dia, int id_seccion, int estado_hora, string hora = null)
         {
+            int version_trimestral = 0;
+            using (SqlCommand command = new SqlCommand("ppGetmaxVersion_trimestral", con))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+                version_trimestral = (int)command.ExecuteScalar();
+            }
             using (SqlCommand cmd = new SqlCommand("ppInsert_hours", con))
             {
 
@@ -93,6 +99,7 @@ namespace Autohorario
                 cmd.Parameters.AddWithValue("@id_dia", id_dia);
                 cmd.Parameters.AddWithValue("@id_seccion", id_seccion);
                 cmd.Parameters.AddWithValue("@estado_hora", estado_hora);
+                cmd.Parameters.AddWithValue("@id_version_trimestral", version_trimestral);
                 cmd.ExecuteNonQuery();
             }
         }
