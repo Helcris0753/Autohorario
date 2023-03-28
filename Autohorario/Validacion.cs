@@ -21,37 +21,11 @@ namespace Autohorario
             }
 
             horario_disponible = Validarhoras(codigo_asignatura, id_seccion, horario_seleccionado);
-            horario_disponible = Validarcreditos(horario_disponible);
+            horario_disponible = horario_disponible.Where(horario => int.Parse(horario.Item1.Substring(3, 2)) - int.Parse(horario.Item1.Substring(0, 2)) >= 2).ToList();
 
             horario_dia_disponible = Validarhoras(codigo_asignatura, id_seccion, horario_dia_disponible);
             horario_dia_disponible = horario_dia_disponible.Where(horario => int.Parse(horario.Item1.Substring(3, 2)) - int.Parse(horario.Item1.Substring(0, 2)) >= 2).ToList();
 
-            //if (codigo_asignatura == "IDS202l")
-            //{
-            //    for (int i = 0; i < horario_disponible.Count; i++)
-            //    {
-            //        Console.WriteLine($"{horario_disponible[i].Item1} {horario_disponible[i].Item2}");
-            //    }
-            //    Console.WriteLine("jaolsijaoihsahsakljs");
-            //    for (int i = 0; i < horario_dia_disponible.Count; i++)
-            //    {
-            //        Console.WriteLine($"{horario_dia_disponible[i].Item1} {horario_dia_disponible[i].Item2}");
-            //    }
-            //}
-
-
-            //if (codigo_asignatura == "IDS202l")
-            //{
-            //    for (int i = 0; i < horario_disponible.Count; i++)
-            //    {
-            //        Console.WriteLine($"{horario_disponible[i].Item1} {horario_disponible[i].Item2}");
-            //    }
-            //    Console.WriteLine("jaolsijaoihsahsakljs");
-            //    for (int i = 0; i < horario_dia_disponible.Count; i++)
-            //    {
-            //        Console.WriteLine($"{horario_dia_disponible[i].Item1} {horario_dia_disponible[i].Item2}");
-            //    }
-            //}
 
 
             Insercion.data_insercion(horario_disponible, horario_dia_disponible, id_seccion, creditos_asignatura);
@@ -118,33 +92,37 @@ namespace Autohorario
                                     hora_inicio_seleccion = int.Parse(instancia_hora.Substring(0, 2));
                                     hora_fin_seleccion = int.Parse(instancia_hora.Substring(3, 2));
                                 }
-            //    {
-            //        int hora_inicio = int.Parse(horario_disponible[i].Item1.Substring(0, 2));
-            //        int hora_fin = int.Parse(horario_disponible[i].Item1.Substring(3, 2)); ;
+                                {
+                                    int hora_inicio = int.Parse(horario_disponible[i].Item1.Substring(0, 2));
+                                    int hora_fin = int.Parse(horario_disponible[i].Item1.Substring(3, 2)); ;
 
-            //        if ((hora_fin - hora_inicio) >= 2)
-            //        {
-            //            horario_credito.Add(($"{horario_disponible[i].Item1}", horario_disponible[i].Item2));
-            //        }
-            //    }
+                                    if ((hora_fin - hora_inicio) >= 2)
+                                    {
+                                        horario_credito.Add(($"{horario_disponible[i].Item1}", horario_disponible[i].Item2));
+                                    }
+                                }
 
-            //    return horario_credito;
+                                return horario_credito;
 
-            return horario_disponible.Where(horario => int.Parse(horario.Item1.Substring(3, 2)) - int.Parse(horario.Item1.Substring(0, 2)) >= 2).ToList();
-        }
-            //    {
-            //        int hora_inicio = int.Parse(horario_disponible[i].Item1.Substring(0, 2));
-            //        int hora_fin = int.Parse(horario_disponible[i].Item1.Substring(3, 2)); ;
+                                return horario_disponible.Where(horario => int.Parse(horario.Item1.Substring(3, 2)) - int.Parse(horario.Item1.Substring(0, 2)) >= 2).ToList();
+                            }
+                            {
+                                int hora_inicio = int.Parse(horario_disponible[i].Item1.Substring(0, 2));
+                                int hora_fin = int.Parse(horario_disponible[i].Item1.Substring(3, 2)); ;
 
-            //        if ((hora_fin - hora_inicio) >= 2)
-            //        {
-            //            horario_credito.Add(($"{horario_disponible[i].Item1}", horario_disponible[i].Item2));
-            //        }
-            //    }
+                                if ((hora_fin - hora_inicio) >= 2)
+                                {
+                                    horario_credito.Add(($"{horario_disponible[i].Item1}", horario_disponible[i].Item2));
+                                }
+                            }
 
-            //    return horario_credito;
+                            return horario_credito;
 
-            return horario_disponible.Where(horario => int.Parse(horario.Item1.Substring(3, 2)) - int.Parse(horario.Item1.Substring(0, 2)) >= 2).ToList();
+                            return horario_disponible.Where(horario => int.Parse(horario.Item1.Substring(3, 2)) - int.Parse(horario.Item1.Substring(0, 2)) >= 2).ToList();
+                        }
+                    }
+                }
+            }
         }
     }
 }
