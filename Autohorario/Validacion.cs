@@ -46,7 +46,6 @@ namespace Autohorario
                 {
                     while (reader.Read())
                     {
-                        Console.WriteLine(reader.GetString(0));
                         horas_ocupadas.Add((reader.GetString(0), reader.GetInt32(1)));
                     }
                 }
@@ -92,36 +91,32 @@ namespace Autohorario
                                     hora_inicio_seleccion = int.Parse(instancia_hora.Substring(0, 2));
                                     hora_fin_seleccion = int.Parse(instancia_hora.Substring(3, 2));
                                 }
+                                else if (hora_fin_asignatura == hora_fin_seleccion)
                                 {
-                                    int hora_inicio = int.Parse(horario_disponible[i].Item1.Substring(0, 2));
-                                    int hora_fin = int.Parse(horario_disponible[i].Item1.Substring(3, 2)); ;
-
-                                    if ((hora_fin - hora_inicio) >= 2)
-                                    {
-                                        horario_credito.Add(($"{horario_disponible[i].Item1}", horario_disponible[i].Item2));
-                                    }
+                                    horario_disponible[i] = ($"{Insercion.zero(hora_inicio_seleccion)}/{Insercion.zero(hora_inicio_asignatura)}", horario_disponible[i].Item2);
+                                    instancia_hora = horario_disponible[i].Item1;
+                                    hora_inicio_seleccion = int.Parse(instancia_hora.Substring(0, 2));
+                                    hora_fin_seleccion = int.Parse(instancia_hora.Substring(3, 2));
+                                }
+                                else
+                                {
+                                    horario_disponible[i] = ($"{Insercion.zero(hora_inicio_seleccion)}/{Insercion.zero(hora_inicio_asignatura)}", horario_disponible[i].Item2);
+                                    horario_disponible.Add(($"{Insercion.zero(hora_fin_asignatura)}/{Insercion.zero(hora_fin_seleccion)}", horario_disponible[i].Item2));
+                                    instancia_hora = horario_disponible[i].Item1;
+                                    hora_inicio_seleccion = int.Parse(instancia_hora.Substring(0, 2));
+                                    hora_fin_seleccion = int.Parse(instancia_hora.Substring(3, 2));
                                 }
 
-                                return horario_credito;
 
-                                return horario_disponible.Where(horario => int.Parse(horario.Item1.Substring(3, 2)) - int.Parse(horario.Item1.Substring(0, 2)) >= 2).ToList();
                             }
+                            if (hora_inicio_seleccion == hora_inicio_asignatura && hora_fin_asignatura == hora_fin_seleccion)
                             {
-                                int hora_inicio = int.Parse(horario_disponible[i].Item1.Substring(0, 2));
-                                int hora_fin = int.Parse(horario_disponible[i].Item1.Substring(3, 2)); ;
-
-                                if ((hora_fin - hora_inicio) >= 2)
-                                {
-                                    horario_credito.Add(($"{horario_disponible[i].Item1}", horario_disponible[i].Item2));
-                                }
+                                horario_disponible.Remove((instancia_hora, horario_disponible[i].Item2));
                             }
-
-                            return horario_credito;
-
-                            return horario_disponible.Where(horario => int.Parse(horario.Item1.Substring(3, 2)) - int.Parse(horario.Item1.Substring(0, 2)) >= 2).ToList();
                         }
                     }
                 }
+                return horario_disponible;
             }
         }
     }
