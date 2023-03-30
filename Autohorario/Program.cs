@@ -33,7 +33,7 @@ namespace Autohorario
                     {
                         horario_seleccionado = gethorarios_seleccionado(int.Parse(item[2].ToString()), 1);
                         horario_secundario = gethorarios_seleccionado(int.Parse(item[2].ToString()), 2);
-                        if (!horario_seleccionado.Equals(horario_secundario))
+                        if (horario_seleccionado.Equals(horario_secundario))
                         {
                             Validacion.Getdata(item[0].ToString(), int.Parse(item[1].ToString()), int.Parse(item[3].ToString()), horario_seleccionado, int.Parse(item[4].ToString()), horario_secundario);
                         }

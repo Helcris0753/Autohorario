@@ -34,7 +34,7 @@ namespace Autohorario
                     break;
                 case 4:
                 case 5:
-                    if (modalidad != 3 && horario_secundario_disponible != null)
+                    if (modalidad != 3 || horario_secundario_disponible == null)
                     {
                         valida_insercion = validar_insercion(horario_disponible, id_seccion, 2, 1, modalidad);
                         if (!(valida_insercion[0].Item1))
@@ -81,6 +81,7 @@ namespace Autohorario
                             {
                                 dia2 = valida_insercion[0].Item2;
                                 valida_insercion = validar_insercion(horario_disponible, id_seccion, 1, 1, 2, dia1, dia2);
+                                System.Console.WriteLine("");
                                 if (!(valida_insercion[0].Item1))
                                 {
                                     valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 1, 2, 2, dia1, dia2);
@@ -112,23 +113,6 @@ namespace Autohorario
                                         valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 1, 2, 2, dia1, dia2);
                                     }
                                 }
-                            }
-                        }
-
-                        dia1 = valida_insercion[0].Item2;
-                        valida_insercion = validar_insercion(horario_secundario_disponible, id_seccion, 2, 1, 2, dia1);
-                        if (!(valida_insercion[0].Item1))
-                        {
-                            valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 2, 2, 2, dia1);
-                        }
-
-                        if (creditos_asignatura == 5)
-                        {
-                            dia2 = valida_insercion[0].Item2;
-                            valida_insercion = validar_insercion(horario_disponible, id_seccion, 1, 1, modalidad, dia1, dia2);
-                            if (!(valida_insercion[0].Item1))
-                            {
-                                valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 1, 2, modalidad, dia1, dia2);
                             }
                         }
 
