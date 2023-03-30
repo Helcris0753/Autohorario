@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -9,9 +8,9 @@ namespace Autohorario
     {
         static private SqlConnection con = Obtencion.con;
 
-        public static void data_insercion(List<(string, int)> horario_disponible, List<(string, int)> horario_semanal_disponible, int id_seccion, int creditos_asignatura)
+        public static void data_insercion(List<(string, int)> horario_disponible, List<(string, int)> horario_semanal_disponible, List<(string, int)> horario_secundario_disponible, int id_seccion, int creditos_asignatura, int modalidad)
         {
-            List<(bool, int)> valida_insercion = new List<(bool, int)> ();
+            List<(bool, int)> valida_insercion = new List<(bool, int)>();
             int dia1, dia2;
             switch (creditos_asignatura)
             {
@@ -19,51 +18,129 @@ namespace Autohorario
                 case 1:
                 case 2:
 
-                    valida_insercion = validar_insercion(horario_disponible, id_seccion, 2, 1);
+                    valida_insercion = validar_insercion(horario_disponible, id_seccion, 2, 1, modalidad);
                     if (!(valida_insercion[0].Item1))
                     {
-                        valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 2, 2);
+                        valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 2, 2, modalidad);
                     }
                     break;
                 case 3:
 
-                    valida_insercion = validar_insercion(horario_disponible, id_seccion, 3, 1);
+                    valida_insercion = validar_insercion(horario_disponible, id_seccion, 3, 1, modalidad);
                     if (!(valida_insercion[0].Item1))
                     {
-                        valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 3, 2);
+                        valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 3, 2, modalidad);
                     }
                     break;
                 case 4:
                 case 5:
-                    valida_insercion = validar_insercion(horario_disponible, id_seccion, 2, 1);
-                    if (!(valida_insercion[0].Item1))
+                    if (modalidad != 3 && horario_secundario_disponible != null)
                     {
-                        valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 2, 2);
-                    }
-
-                    dia1 = valida_insercion[0].Item2;
-                    valida_insercion = validar_insercion(horario_disponible, id_seccion, 2, 1, dia1);
-                    if (!(valida_insercion[0].Item1))
-                    {
-                        valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 2, 2, dia1);
-                    }
-
-                    if (creditos_asignatura == 5)
-                    {
-                        dia2 = valida_insercion[0].Item2;
-                        valida_insercion = validar_insercion(horario_disponible, id_seccion, 1, 1, dia1, dia2);
+                        valida_insercion = validar_insercion(horario_disponible, id_seccion, 2, 1, modalidad);
                         if (!(valida_insercion[0].Item1))
                         {
-                            valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 1, 2, dia1, dia2);
+                            valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 2, 2, modalidad);
+                        }
+
+                        dia1 = valida_insercion[0].Item2;
+                        valida_insercion = validar_insercion(horario_disponible, id_seccion, 2, 1, modalidad, dia1);
+                        if (!(valida_insercion[0].Item1))
+                        {
+                            valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 2, 2, modalidad, dia1);
+                        }
+
+                        if (creditos_asignatura == 5)
+                        {
+                            dia2 = valida_insercion[0].Item2;
+                            valida_insercion = validar_insercion(horario_disponible, id_seccion, 1, 1, modalidad, dia1, dia2);
+                            if (!(valida_insercion[0].Item1))
+                            {
+                                valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 1, 2, modalidad, dia1, dia2);
+                            }
                         }
                     }
+                    else
+                    {
+                        valida_insercion = validar_insercion(horario_disponible, id_seccion, 2, 1, 1);
+                        if (!(valida_insercion[0].Item1))
+                        {
+                            valida_insercion = validar_insercion(horario_secundario_disponible, id_seccion, 2, 1, 1);
+                            if (!(valida_insercion[0].Item1))
+                            {
+                                valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 2, 2, 1);
+                            }
+
+                            dia1 = valida_insercion[0].Item2;
+                            valida_insercion = validar_insercion(horario_secundario_disponible, id_seccion, 2, 1, 2, dia1);
+                            if (!(valida_insercion[0].Item1))
+                            {
+                                valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 2, 2, 2, dia1);
+                            }
+
+                            if (creditos_asignatura == 5)
+                            {
+                                dia2 = valida_insercion[0].Item2;
+                                valida_insercion = validar_insercion(horario_disponible, id_seccion, 1, 1, 2, dia1, dia2);
+                                if (!(valida_insercion[0].Item1))
+                                {
+                                    valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 1, 2, 2, dia1, dia2);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            dia1 = valida_insercion[0].Item2;
+                            valida_insercion = validar_insercion(horario_secundario_disponible, id_seccion, 2, 1, 2, dia1);
+                            if (!(valida_insercion[0].Item1))
+                            {
+                                valida_insercion = validar_insercion(horario_disponible, id_seccion, 2, 1, 2, dia1);
+                                if (!(valida_insercion[0].Item1))
+                                {
+                                    valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 2, 2, 2, dia1);
+                                }
+                            }
+
+                            if (creditos_asignatura == 5)
+                            {
+                                dia2 = valida_insercion[0].Item2;
+                                valida_insercion = validar_insercion(horario_secundario_disponible, id_seccion, 1, 1, 2, dia1, dia2);
+                                if (!(valida_insercion[0].Item1))
+                                {
+                                    valida_insercion = validar_insercion(horario_disponible, id_seccion, 1, 1, 2, dia1, dia2);
+                                    if (!(valida_insercion[0].Item1))
+                                    {
+                                        valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 1, 2, 2, dia1, dia2);
+                                    }
+                                }
+                            }
+                        }
+
+                        dia1 = valida_insercion[0].Item2;
+                        valida_insercion = validar_insercion(horario_secundario_disponible, id_seccion, 2, 1, 2, dia1);
+                        if (!(valida_insercion[0].Item1))
+                        {
+                            valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 2, 2, 2, dia1);
+                        }
+
+                        if (creditos_asignatura == 5)
+                        {
+                            dia2 = valida_insercion[0].Item2;
+                            valida_insercion = validar_insercion(horario_disponible, id_seccion, 1, 1, modalidad, dia1, dia2);
+                            if (!(valida_insercion[0].Item1))
+                            {
+                                valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 1, 2, modalidad, dia1, dia2);
+                            }
+                        }
+
+                    }
+
                     break;
                 default:
-                    insertar(1, id_seccion, 3);
+                    insertar(0, id_seccion, 3, 0);
                     break;
             }
         }
-        private static List<(bool, int)> validar_insercion(List<(string, int)> horario, int id_seccion, int horas, int estado_horas, int dia1 = 0, int dia2 = 0)
+        private static List<(bool, int)> validar_insercion(List<(string, int)> horario, int id_seccion, int horas, int estado_horas, int modailidad, int dia1 = 0, int dia2 = 0)
         {
             List<(bool, int)> validar_insercion = new List<(bool, int)>();
             validar_insercion.Add((false, 0));
@@ -74,7 +151,7 @@ namespace Autohorario
 
                 if (horario[i].Item2 != dia1 && horario[i].Item2 != dia2)
                 {
-                    insertar(horario[i].Item2, id_seccion, estado_horas, $"{zero(hora_inicio)}/{zero(hora_inicio + horas)}");
+                    insertar(horario[i].Item2, id_seccion, estado_horas, modailidad, $"{zero(hora_inicio)}/{zero(hora_inicio + horas)}");
                     validar_insercion[0] = (true, horario[i].Item2);
                     return validar_insercion;
                 }
@@ -82,7 +159,7 @@ namespace Autohorario
             return validar_insercion;
         }
 
-        private static void insertar(int id_dia, int id_seccion, int estado_hora, string hora = null)
+        private static void insertar(int id_dia, int id_seccion, int estado_hora, int modalidad, string hora = null)
         {
             int version_trimestral = 0;
             using (SqlCommand command = new SqlCommand("ppGetmaxVersion_trimestral", con))
@@ -101,6 +178,7 @@ namespace Autohorario
                 cmd.Parameters.AddWithValue("@id_seccion", id_seccion);
                 cmd.Parameters.AddWithValue("@estado_hora", estado_hora);
                 cmd.Parameters.AddWithValue("@id_version_trimestral", version_trimestral);
+                cmd.Parameters.AddWithValue("@id_modalidad", modalidad);
                 cmd.ExecuteNonQuery();
             }
         }

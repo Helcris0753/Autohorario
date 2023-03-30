@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Diagnostics;
 
 namespace Autohorario
 {
@@ -23,11 +21,27 @@ namespace Autohorario
                 adapter.Fill(ds);
 
                 List<(string, int)> horario_seleccionado = new List<(string, int)>();
-
+                List<(string, int)> horario_secundario = new List<(string, int)>();
                 foreach (DataRow item in ds.Tables[0].Rows)
                 {
-                    horario_seleccionado = gethorarios_seleccionado(int.Parse(item[2].ToString()), int.Parse(item[4].ToString()));
-                    Validacion.Getdata(item[0].ToString(), int.Parse(item[1].ToString()), int.Parse(item[3].ToString()), horario_seleccionado);
+                    if (int.Parse(item[4].ToString()) != 3)
+                    {
+                        horario_seleccionado = gethorarios_seleccionado(int.Parse(item[2].ToString()), int.Parse(item[4].ToString()));
+                        Validacion.Getdata(item[0].ToString(), int.Parse(item[1].ToString()), int.Parse(item[3].ToString()), horario_seleccionado, int.Parse(item[4].ToString()));
+                    }
+                    else
+                    {
+                        horario_seleccionado = gethorarios_seleccionado(int.Parse(item[2].ToString()), 1);
+                        horario_secundario = gethorarios_seleccionado(int.Parse(item[2].ToString()), 2);
+                        if (!horario_seleccionado.Equals(horario_secundario))
+                        {
+                            Validacion.Getdata(item[0].ToString(), int.Parse(item[1].ToString()), int.Parse(item[3].ToString()), horario_seleccionado, int.Parse(item[4].ToString()), horario_secundario);
+                        }
+                        else
+                        {
+                            Validacion.Getdata(item[0].ToString(), int.Parse(item[1].ToString()), int.Parse(item[3].ToString()), horario_seleccionado, int.Parse(item[4].ToString()));
+                        }
+                    }
                 }
             }
         }

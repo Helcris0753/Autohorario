@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -10,11 +9,11 @@ namespace Autohorario
     {
         static private SqlConnection con = Obtencion.con;
 
-        public static void Getdata(string codigo_asignatura, int id_seccion, int creditos_asignatura, List<(string, int)> horario_seleccionado)
+        public static void Getdata(string codigo_asignatura, int id_seccion, int creditos_asignatura, List<(string, int)> horario_seleccionado, int modalidad, List<(string, int)> horario_secundario = null)
         {
             List<(string, int)> horario_disponible = new List<(string, int)>();
             List<(string, int)> horario_dia_disponible = new List<(string, int)>();
-
+            List<(string, int)> horario_secundario_disponible = new List<(string, int)>();
             for (int i = 1; i < 6; i++)
             {
                 horario_dia_disponible.Add(("07/22", i));
@@ -26,9 +25,13 @@ namespace Autohorario
             horario_dia_disponible = Validarhoras(codigo_asignatura, id_seccion, horario_dia_disponible);
             horario_dia_disponible = horario_dia_disponible.Where(horario => int.Parse(horario.Item1.Substring(3, 2)) - int.Parse(horario.Item1.Substring(0, 2)) >= 2).ToList();
 
+            if (horario_secundario != null)
+            {
+                horario_secundario_disponible = Validarhoras(codigo_asignatura, id_seccion, horario_secundario);
+                horario_secundario_disponible = horario_secundario_disponible.Where(horario => int.Parse(horario.Item1.Substring(3, 2)) - int.Parse(horario.Item1.Substring(0, 2)) >= 2).ToList();
+            }
 
-
-            Insercion.data_insercion(horario_disponible, horario_dia_disponible, id_seccion, creditos_asignatura);
+            Insercion.data_insercion(horario_disponible, horario_dia_disponible, horario_secundario_disponible, id_seccion, creditos_asignatura, modalidad);
         }
         private static List<(string, int)> Validarhoras(string codigo_asignatura, int id_seccion, List<(string, int)> horario_seleccionado)
         {
