@@ -22,7 +22,7 @@ namespace Autohorario
                     valida_insercion = validar_insercion(horario_disponible, id_seccion, 2, 1);
                     if (!(valida_insercion[0].Item1))
                     {
-                        valida_insercion = validar_insercion(horario_disponible, id_seccion, 2, 2);
+                        valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 2, 2);
                     }
                     break;
                 case 3:
@@ -30,7 +30,7 @@ namespace Autohorario
                     valida_insercion = validar_insercion(horario_disponible, id_seccion, 3, 1);
                     if (!(valida_insercion[0].Item1))
                     {
-                        valida_insercion = validar_insercion(horario_disponible, id_seccion, 3, 2);
+                        valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 3, 2);
                     }
                     break;
                 case 4:
