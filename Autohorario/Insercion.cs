@@ -81,7 +81,6 @@ namespace Autohorario
                             {
                                 dia2 = valida_insercion[0].Item2;
                                 valida_insercion = validar_insercion(horario_disponible, id_seccion, 1, 1, 2, dia1, dia2);
-                                System.Console.WriteLine("");
                                 if (!(valida_insercion[0].Item1))
                                 {
                                     valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 1, 2, 2, dia1, dia2);

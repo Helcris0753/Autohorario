@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 
 namespace Autohorario
 {
@@ -10,6 +12,8 @@ namespace Autohorario
         internal static SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["horarioConexion"].ConnectionString);
         static void Main(string[] args)
         {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
             con.Open();
             using (SqlCommand command = new SqlCommand("ppGetasignatura", con))
             {
@@ -27,7 +31,7 @@ namespace Autohorario
                     if (int.Parse(item[4].ToString()) != 3)
                     {
                         horario_seleccionado = gethorarios_seleccionado(int.Parse(item[2].ToString()), int.Parse(item[4].ToString()));
-                        Validacion.Getdata(item[0].ToString(), int.Parse(item[1].ToString()), int.Parse(item[3].ToString()), horario_seleccionado, int.Parse(item[4].ToString()));
+                        Validacion.Getdata(item[0].ToString(), int.Parse(item[1].ToString()), int.Parse(item[3].ToString()), horario_seleccionado, int.Parse(item[4].ToString()), int.Parse(item[2].ToString()));
                     }
                     else
                     {
@@ -35,15 +39,19 @@ namespace Autohorario
                         horario_secundario = gethorarios_seleccionado(int.Parse(item[2].ToString()), 2);
                         if (horario_seleccionado.Equals(horario_secundario))
                         {
-                            Validacion.Getdata(item[0].ToString(), int.Parse(item[1].ToString()), int.Parse(item[3].ToString()), horario_seleccionado, int.Parse(item[4].ToString()), horario_secundario);
+                            Validacion.Getdata(item[0].ToString(), int.Parse(item[1].ToString()), int.Parse(item[3].ToString()), horario_seleccionado, int.Parse(item[4].ToString()), int.Parse(item[2].ToString()));
+
                         }
                         else
                         {
-                            Validacion.Getdata(item[0].ToString(), int.Parse(item[1].ToString()), int.Parse(item[3].ToString()), horario_seleccionado, int.Parse(item[4].ToString()));
+                            Validacion.Getdata(item[0].ToString(), int.Parse(item[1].ToString()), int.Parse(item[3].ToString()), horario_seleccionado, int.Parse(item[4].ToString()), int.Parse(item[2].ToString()), horario_secundario);
                         }
                     }
                 }
             }
+            stopwatch.Stop();
+            Console.WriteLine("Tiempo transcurrido: {0} ms", stopwatch.ElapsedMilliseconds);
+            Console.ReadKey();
         }
         private static List<(string, int)> gethorarios_seleccionado(int id_profesor, int id_modalidad)
         {
