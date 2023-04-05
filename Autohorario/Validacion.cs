@@ -29,17 +29,6 @@ namespace Autohorario
 
             if (horario_secundario != null)
             {
-                Console.WriteLine("Horario seleccionado");
-                for (int i = 0; i < horario_seleccionado.Count; i++)
-                {
-                    Console.WriteLine("{0} {1}", horario_seleccionado[i].Item1, horario_seleccionado[i].Item2);
-                }
-                Console.WriteLine("hora secundario");
-                for (int i = 0; i < horario_secundario_disponible.Count; i++)
-                {
-                    Console.WriteLine("{0} {1}", horario_secundario_disponible[i].Item1, horario_secundario_disponible[i].Item2);
-                }
-                Console.ReadKey();
                 horario_secundario_disponible = Validarhoras(codigo_asignatura, id_profesor, horario_secundario);
                 horario_secundario_disponible = horario_secundario_disponible.Where(horario => int.Parse(horario.Item1.Substring(3, 2)) - int.Parse(horario.Item1.Substring(0, 2)) >= 2).ToList();
             }
@@ -58,7 +47,7 @@ namespace Autohorario
             {
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@codigo_asignatura", codigo_asignatura);
-                cmd.Parameters.AddWithValue("@id_seccion", id_profesor);
+                cmd.Parameters.AddWithValue("@id_profesor", id_profesor);
 
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
@@ -108,25 +97,7 @@ namespace Autohorario
                 }
 
                 horario_disponible = horario_seleccionado.Except(horas_ocupadas).ToList();
-                if (false)
-                {
-                    Console.WriteLine("Horario seleccionado");
-                    for (int i = 0; i < horario_seleccionado.Count; i++)
-                    {
-                        Console.WriteLine("{0} {1}", horario_seleccionado[i].Item1, horario_seleccionado[i].Item2);
-                    }
-                    Console.WriteLine("Horas ocupadas");
-                    for (int i = 0; i < horas_ocupadas.Count; i++)
-                    {
-                        Console.WriteLine("{0} {1}", horas_ocupadas[i].Item1, horas_ocupadas[i].Item2);
-                    }
-                    Console.WriteLine("Horas disponibles");
-                    for (int i = 0; i < horario_disponible.Count; i++)
-                    {
-                        Console.WriteLine("{0} {1}", horario_disponible[i].Item1, horario_disponible[i].Item2);
-                    }
-                    Console.ReadKey();
-                }
+               
                 
                 return horario_disponible;
             }
