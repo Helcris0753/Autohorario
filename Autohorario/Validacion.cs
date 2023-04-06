@@ -33,13 +33,10 @@ namespace Autohorario
             }
             //Se pasa horario seleccionado junto con otras informaciones para rellenar horario disponible
             horario_disponible = Validarhoras(codigo_asignatura, id_profesor, horario_seleccionado);
-            for (int i = 0; i < horario_disponible.Count; i++)
-            {
-                Console.WriteLine($"{horario_disponible[i].Item1} {horario_disponible[i].Item2}");
-            }
-            Console.ReadKey();
+            horario_disponible = horario_disponible.Where(horario => int.Parse(horario.Item1.Substring(3, 2)) - int.Parse(horario.Item1.Substring(0, 2)) > 0).ToList();
             //Se pasa horario semanal junto con otras informaciones para que horario semanal se corte segun las horas ocupadas
             horario_dia_disponible = Validarhoras(codigo_asignatura, id_profesor, horario_dia_disponible);
+            horario_dia_disponible = horario_dia_disponible.Where(horario => int.Parse(horario.Item1.Substring(3, 2)) - int.Parse(horario.Item1.Substring(0, 2)) > 0).ToList();
 
             //Si horario secundario no es nulo entonces la asignatura es hibrida o el profesor solo tiene una modalidad de horario seleccionado, por consiguiente se hace lo mismo para el horario secundario
             if (horario_secundario != null)
