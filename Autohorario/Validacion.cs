@@ -33,7 +33,9 @@ namespace Autohorario
             }
             //Se pasa horario seleccionado junto con otras informaciones para rellenar horario disponible
             horario_disponible = Validarhoras(codigo_asignatura, id_profesor, horario_seleccionado);
+            //si el intervalo de horas es menor a 0, no se toma en cuenta
             horario_disponible = horario_disponible.Where(horario => int.Parse(horario.Item1.Substring(3, 2)) - int.Parse(horario.Item1.Substring(0, 2)) > 0).ToList();
+            
             //Se pasa horario semanal junto con otras informaciones para que horario semanal se corte segun las horas ocupadas
             horario_dia_disponible = Validarhoras(codigo_asignatura, id_profesor, horario_dia_disponible);
             horario_dia_disponible = horario_dia_disponible.Where(horario => int.Parse(horario.Item1.Substring(3, 2)) - int.Parse(horario.Item1.Substring(0, 2)) > 0).ToList();
