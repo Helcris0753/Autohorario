@@ -12,6 +12,7 @@ namespace Autohorario
         internal static SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["horarioConexion"].ConnectionString);
         static void Main(string[] args)
         {
+            
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             con.Open();

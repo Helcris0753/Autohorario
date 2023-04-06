@@ -8,7 +8,7 @@ namespace Autohorario
     {
         static private SqlConnection con = Obtencion.con;
 
-        public static void data_insercion(List<(string, int)> horario_disponible, List<(string, int)> horario_semanal_disponible, List<(string, int)> horario_secundario_disponible, int id_seccion, int creditos_asignatura, int modalidad)
+        public static void data_insercion(List<(string, int)> horario_disponible, List<(string, int)> horario_semanal_disponible, List<(string, int)> horario_secundario_disponible, List<(string, int)> horario_seleccionado, int id_seccion, int creditos_asignatura, int modalidad)
         {
             List<(bool, int)> valida_insercion = new List<(bool, int)>();
             int dia1, dia2;
@@ -22,6 +22,11 @@ namespace Autohorario
                     if (!(valida_insercion[0].Item1))
                     {
                         valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 2, 2, modalidad);
+                        if (!(valida_insercion[0].Item1))
+                        {
+                            int hora_inicio = int.Parse(horario_seleccionado[0].Item1.Substring(0,2));
+                            insertar(horario_seleccionado[0].Item2, id_seccion, 3, modalidad, $"{zero(hora_inicio)}/{zero(hora_inicio + 2)}");
+                        }
                     }
                     break;
                 case 3:
@@ -30,6 +35,11 @@ namespace Autohorario
                     if (!(valida_insercion[0].Item1))
                     {
                         valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 3, 2, modalidad);
+                        if (!(valida_insercion[0].Item1))
+                        {
+                            int hora_inicio = int.Parse(horario_seleccionado[0].Item1.Substring(0, 2));
+                            insertar(horario_seleccionado[0].Item2, id_seccion, 3, modalidad, $"{zero(hora_inicio)}/{zero(hora_inicio + 2)}");
+                        }
                     }
                     break;
                 case 4:
@@ -40,6 +50,11 @@ namespace Autohorario
                         if (!(valida_insercion[0].Item1))
                         {
                             valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 2, 2, modalidad);
+                            if (!(valida_insercion[0].Item1))
+                            {
+                                int hora_inicio = int.Parse(horario_seleccionado[0].Item1.Substring(0, 2));
+                                insertar(horario_seleccionado[0].Item2, id_seccion, 3, modalidad, $"{zero(hora_inicio)}/{zero(hora_inicio + 2)}");
+                            }
                         }
 
                         dia1 = valida_insercion[0].Item2;
@@ -47,6 +62,17 @@ namespace Autohorario
                         if (!(valida_insercion[0].Item1))
                         {
                             valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 2, 2, modalidad, dia1);
+                            if (!(valida_insercion[0].Item1))
+                            {
+                                for (int i = 0; i < horario_seleccionado.Count; i++)
+                                {
+                                    if (dia1 != horario_seleccionado[i].Item2)
+                                    {
+                                        int hora_inicio = int.Parse(horario_seleccionado[i].Item1.Substring(0, 2));
+                                        insertar(horario_seleccionado[i].Item2, id_seccion, 3, modalidad, $"{zero(hora_inicio)}/{zero(hora_inicio + 2)}");
+                                    }
+                                }
+                            }
                         }
 
                         if (creditos_asignatura == 5)
@@ -56,6 +82,17 @@ namespace Autohorario
                             if (!(valida_insercion[0].Item1))
                             {
                                 valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 1, 2, modalidad, dia1, dia2);
+                                if (!(valida_insercion[0].Item1))
+                                {
+                                    for (int i = 0; i < horario_seleccionado.Count; i++)
+                                    {
+                                        if (dia1 != horario_seleccionado[i].Item2 && dia2 != horario_seleccionado[i].Item2)
+                                        {
+                                            int hora_inicio = int.Parse(horario_seleccionado[i].Item1.Substring(0, 2));
+                                            insertar(horario_seleccionado[i].Item2, id_seccion, 3, modalidad, $"{zero(hora_inicio)}/{zero(hora_inicio + 1)}");
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -68,6 +105,11 @@ namespace Autohorario
                             if (!(valida_insercion[0].Item1))
                             {
                                 valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 2, 2, 1);
+                                if (!(valida_insercion[0].Item1))
+                                {
+                                    int hora_inicio = int.Parse(horario_seleccionado[0].Item1.Substring(0, 2));
+                                    insertar(horario_seleccionado[0].Item2, id_seccion, 3, modalidad, $"{zero(hora_inicio)}/{zero(hora_inicio + 2)}");
+                                }
                             }
 
                             dia1 = valida_insercion[0].Item2;
@@ -75,6 +117,17 @@ namespace Autohorario
                             if (!(valida_insercion[0].Item1))
                             {
                                 valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 2, 2, 2, dia1);
+                                if (!(valida_insercion[0].Item1))
+                                {
+                                    for (int i = 0; i < horario_seleccionado.Count; i++)
+                                    {
+                                        if (dia1 != horario_seleccionado[i].Item2)
+                                        {
+                                            int hora_inicio = int.Parse(horario_seleccionado[i].Item1.Substring(0, 2));
+                                            insertar(horario_seleccionado[i].Item2, id_seccion, 3, modalidad, $"{zero(hora_inicio)}/{zero(hora_inicio + 2)}");
+                                        }
+                                    }
+                                }
                             }
 
                             if (creditos_asignatura == 5)
@@ -84,6 +137,18 @@ namespace Autohorario
                                 if (!(valida_insercion[0].Item1))
                                 {
                                     valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 1, 2, 2, dia1, dia2);
+                                    if (!(valida_insercion[0].Item1))
+                                    {
+                                        for (int i = 0; i < horario_seleccionado.Count; i++)
+                                        {
+                                            if (dia1 != horario_seleccionado[i].Item2 && dia2 != horario_seleccionado[i].Item2) 
+                                            {
+                                                int hora_inicio = int.Parse(horario_seleccionado[i].Item1.Substring(0, 2));
+                                                insertar(horario_seleccionado[i].Item2, id_seccion, 3, modalidad, $"{zero(hora_inicio)}/{zero(hora_inicio + 1)}");
+                                            }
+                                        }
+                                        
+                                    }
                                 }
                             }
                         }
@@ -97,6 +162,17 @@ namespace Autohorario
                                 if (!(valida_insercion[0].Item1))
                                 {
                                     valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 2, 2, 2, dia1);
+                                    if (!(valida_insercion[0].Item1))
+                                    {
+                                        for (int i = 0; i < horario_seleccionado.Count; i++)
+                                        {
+                                            if (dia1 != horario_seleccionado[i].Item2)
+                                            {
+                                                int hora_inicio = int.Parse(horario_seleccionado[i].Item1.Substring(0, 2));
+                                                insertar(horario_seleccionado[i].Item2, id_seccion, 3, modalidad, $"{zero(hora_inicio)}/{zero(hora_inicio + 2)}");
+                                            }
+                                        }
+                                    }
                                 }
                             }
 
@@ -110,6 +186,17 @@ namespace Autohorario
                                     if (!(valida_insercion[0].Item1))
                                     {
                                         valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 1, 2, 2, dia1, dia2);
+                                        if (!(valida_insercion[0].Item1))
+                                        {
+                                            for (int i = 0; i < horario_seleccionado.Count; i++)
+                                            {
+                                                if (dia1 != horario_seleccionado[i].Item2 && dia2 != horario_seleccionado[i].Item2)
+                                                {
+                                                    int hora_inicio = int.Parse(horario_seleccionado[i].Item1.Substring(0, 2));
+                                                    insertar(horario_seleccionado[i].Item2, id_seccion, 3, modalidad, $"{zero(hora_inicio)}/{zero(hora_inicio + 1)}");
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -123,7 +210,7 @@ namespace Autohorario
                     break;
             }
         }
-        private static List<(bool, int)> validar_insercion(List<(string, int)> horario, int id_seccion, int horas, int estado_horas, int modailidad, int dia1 = 0, int dia2 = 0)
+        private static List<(bool, int)> validar_insercion(List<(string, int)> horario, int id_seccion, int horas, int estado_horas, int modaliidad, int dia1 = 0, int dia2 = 0)
         {
             List<(bool, int)> validar_insercion = new List<(bool, int)>();
             validar_insercion.Add((false, 0));
@@ -134,7 +221,7 @@ namespace Autohorario
 
                 if (horario[i].Item2 != dia1 && horario[i].Item2 != dia2)
                 {
-                    insertar(horario[i].Item2, id_seccion, estado_horas, modailidad, $"{zero(hora_inicio)}/{zero(hora_inicio + horas)}");
+                    insertar(horario[i].Item2, id_seccion, estado_horas, modaliidad, $"{zero(hora_inicio)}/{zero(hora_inicio + horas)}");
                     validar_insercion[0] = (true, horario[i].Item2);
                     return validar_insercion;
                 }
