@@ -10,17 +10,22 @@ namespace Autohorario
 
         public static void data_insercion(List<(string, int)> horario_disponible, List<(string, int)> horario_semanal_disponible, List<(string, int)> horario_secundario_disponible, List<(string, int)> horario_seleccionado, int id_seccion, int creditos_asignatura, int modalidad)
         {
+            //variables que se van a usar
             List<(bool, int)> valida_insercion = new List<(bool, int)>();
             int dia1, dia2;
+            //las inserciones de las asignaturas dependeran de sus creditos.
             switch (creditos_asignatura)
             {
+                //las asignaturas de 0 a 2 creditos requieren metodos de insercion iguales
                 case 0:
                 case 1:
                 case 2:
-
+                    //validar_insercion un metodo que me devuelve si se pudo insertar segun el horario seleccionado por el profesor previamente pasado por validacion
+                    // y el dia correspodiente donde se inserto
                     valida_insercion = validar_insercion(horario_disponible, id_seccion, 2, 1, modalidad);
                     if (!(valida_insercion[0].Item1))
                     {
+                        //si no se pudo insertar con el horario disponible, se hace con el horario semanal disponible 
                         valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 2, 2, modalidad);
                         if (!(valida_insercion[0].Item1))
                         {
