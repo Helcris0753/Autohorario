@@ -30,7 +30,7 @@ namespace Autohorario
                         if (!(valida_insercion[0].Item1))
                         {
                             //si tampoco se pudo con el horario semanal disponible, es que el horario no tiene espacio, por lo que se colocara independientemente que choca.
-                            int hora_inicio = int.Parse(horario_seleccionado[0].Item1.Substring(0,2));
+                            int hora_inicio = int.Parse(horario_seleccionado[0].Item1.Substring(0, 2));
                             insertar(horario_seleccionado[0].Item2, id_seccion, 3, modalidad, $"{zero(hora_inicio)}/{zero(hora_inicio + 2)}");
                         }
                     }
@@ -67,7 +67,7 @@ namespace Autohorario
                                 insertar(horario_seleccionado[0].Item2, id_seccion, 3, modalidad, $"{zero(hora_inicio)}/{zero(hora_inicio + 2)}");
                             }
                         }
-                        
+
                         valida_insercion = validar_insercion(horario_disponible, id_seccion, 2, 1, modalidad, dia1);
                         dia2 = valida_insercion[0].Item2;
                         if (!(valida_insercion[0].Item1))
@@ -154,13 +154,13 @@ namespace Autohorario
                                     {
                                         for (int i = 0; i < horario_seleccionado.Count; i++)
                                         {
-                                            if (dia1 != horario_seleccionado[i].Item2 && dia2 != horario_seleccionado[i].Item2) 
+                                            if (dia1 != horario_seleccionado[i].Item2 && dia2 != horario_seleccionado[i].Item2)
                                             {
                                                 int hora_inicio = int.Parse(horario_seleccionado[i].Item1.Substring(0, 2));
                                                 insertar(horario_seleccionado[i].Item2, id_seccion, 3, modalidad, $"{zero(hora_inicio)}/{zero(hora_inicio + 1)}");
                                             }
                                         }
-                                        
+
                                     }
                                 }
                             }

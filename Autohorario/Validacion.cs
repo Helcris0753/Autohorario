@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -34,7 +33,7 @@ namespace Autohorario
             //Se pasa horario seleccionado junto con otras informaciones para rellenar horario disponible
             horario_disponible = Validarhoras(codigo_asignatura, id_profesor, horario_seleccionado);
             //si el intervalo de horas es menor a 0, no se toma en cuenta
-            
+
             //Se pasa horario semanal junto con otras informaciones para que horario semanal se corte segun las horas ocupadas
             horario_dia_disponible = Validarhoras(codigo_asignatura, id_profesor, horario_dia_disponible);
 
@@ -45,7 +44,7 @@ namespace Autohorario
                 horario_secundario_disponible = horario_secundario_disponible.Where(horario => int.Parse(horario.Item1.Substring(3, 2)) - int.Parse(horario.Item1.Substring(0, 2)) >= 2).ToList();
             }
             //cuando ya se validaron las horas disponible, se pasa a la sigueinte parte del algoritmo, la insercion.
-            Insercion.data_insercion(horario_disponible, horario_dia_disponible, horario_secundario_disponible, horario_seleccionado,id_seccion, creditos_asignatura, modalidad);
+            Insercion.data_insercion(horario_disponible, horario_dia_disponible, horario_secundario_disponible, horario_seleccionado, id_seccion, creditos_asignatura, modalidad);
         }
         //metodo para validar las horas disponibles
         private static List<(string, int)> Validarhoras(string codigo_asignatura, int id_profesor, List<(string, int)> horario_seleccionado)
@@ -139,9 +138,8 @@ namespace Autohorario
                     }
                 }
 
-                    //horarios diponible sera igual horario seleccionado donde no hayan registros iguales, pues lo anterior valida los solapamientos, mas no
-                    // cuando las horas iniciales y finales tanto ocupadas como seleccionadas son iguales.
-                    horario_seleccionado = horario_seleccionado.Where(horario => int.Parse(horario.Item1.Substring(3, 2)) - int.Parse(horario.Item1.Substring(0, 2)) > 0).ToList();
+                horario_disponible = horario_seleccionado.Where(horario => int.Parse(horario.Item1.Substring(3, 2)) - int.Parse(horario.Item1.Substring(0, 2)) > 0).ToList();
+
                 horario_disponible = horario_disponible.Except(horas_ocupadas).ToList();
 
                 return horario_disponible;
