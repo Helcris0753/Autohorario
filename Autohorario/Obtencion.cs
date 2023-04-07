@@ -9,7 +9,7 @@ namespace Autohorario
 {
     internal class Obtencion
     {
-        internal static SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["horarioConexion"].ConnectionString);
+        internal static SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["horarioslaptop"].ConnectionString);
         static void Main(string[] args)
         {
             //clase para medir el tiempo de ejecucion del programa

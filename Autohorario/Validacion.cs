@@ -20,7 +20,7 @@ namespace Autohorario
             List<(string, int)> horario_secundario_disponible = new List<(string, int)>();
 
             //se rellena la lista que simula las horas disponibles durante la semana.
-            for (int i = 1; i < 6; i++)
+            for (int i = 1; i < 7; i++)
             {
                 if (i == 6)
                 {
@@ -34,11 +34,9 @@ namespace Autohorario
             //Se pasa horario seleccionado junto con otras informaciones para rellenar horario disponible
             horario_disponible = Validarhoras(codigo_asignatura, id_profesor, horario_seleccionado);
             //si el intervalo de horas es menor a 0, no se toma en cuenta
-            horario_disponible = horario_disponible.Where(horario => int.Parse(horario.Item1.Substring(3, 2)) - int.Parse(horario.Item1.Substring(0, 2)) > 0).ToList();
             
             //Se pasa horario semanal junto con otras informaciones para que horario semanal se corte segun las horas ocupadas
             horario_dia_disponible = Validarhoras(codigo_asignatura, id_profesor, horario_dia_disponible);
-            horario_dia_disponible = horario_dia_disponible.Where(horario => int.Parse(horario.Item1.Substring(3, 2)) - int.Parse(horario.Item1.Substring(0, 2)) > 0).ToList();
 
             //Si horario secundario no es nulo entonces la asignatura es hibrida o el profesor solo tiene una modalidad de horario seleccionado, por consiguiente se hace lo mismo para el horario secundario
             if (horario_secundario != null)
@@ -54,7 +52,7 @@ namespace Autohorario
         {
             //variables a usar.
             string instancia_hora = null;
-            int hora_inicio_seleccion, hora_fin_seleccion, hora_inicio_asignatura, hora_fin_asignatura;
+            int hora_inicio_seleccion, hora_fin_seleccion, hora_inicio_asignatura, hora_fin_asignatura, dia;
             List<(string, int)> horario_disponible = new List<(string, int)>();
             List<(string, int)> horas_ocupadas = new List<(string, int)>();
             //todo dentro del using pertenece al store procedure ppCheck_schedule las variables que se le pasan son el codigo de la asignatua y el id del profesor
@@ -86,6 +84,7 @@ namespace Autohorario
                 //un for que va registro por registro en el horario disponible
                 for (int i = 0; i < horario_seleccionado.Count; i++)
                 {
+                    dia = horario_seleccionado[i].Item2;
                     for (int j = 0; j < horas_ocupadas.Count; j++)
                     {
                         //la nstancia hora es el intervalo de hora de horario seleccionado para el registro i
@@ -108,7 +107,7 @@ namespace Autohorario
                             {
                                 //el registro de i se modifica segun los requerimientos del if
                                 //insercion.zero es un metodo que viene de la clase insercion que sirve para colocar un zero antes de numero si numero es menor a 10
-                                horario_seleccionado[i] = ($"{Insercion.zero(hora_fin_asignatura)}/{Insercion.zero(hora_fin_seleccion)}", horario_seleccionado[i].Item2);
+                                horario_seleccionado[i] = ($"{Insercion.zero(hora_fin_asignatura)}/{Insercion.zero(hora_fin_seleccion)}", dia);
                             }
                             //si las horas ocupadas se solapan de tal modo:
                             // __________       (horas seleccionadas)
@@ -117,7 +116,7 @@ namespace Autohorario
                             //Se toma en cuenta cuando las horas de inicio da ambos intervalos son iguales
                             else if (hora_inicio_seleccion < hora_inicio_asignatura && hora_fin_seleccion <= hora_fin_asignatura && hora_fin_seleccion > hora_inicio_asignatura)
                             {
-                                horario_seleccionado[i] = ($"{Insercion.zero(hora_inicio_seleccion)}/{Insercion.zero(hora_inicio_asignatura)}", horario_seleccionado[i].Item2);
+                                horario_seleccionado[i] = ($"{Insercion.zero(hora_inicio_seleccion)}/{Insercion.zero(hora_inicio_asignatura)}", dia);
                             }
                             //si las horas ocupadas se solapan de tal modo:
                             // ___________________       (horas seleccionadas)
@@ -126,18 +125,25 @@ namespace Autohorario
                             //Las horas que van desde el fin de las horas ocupadas hasta el final de las seleccionadas se insertan en horario seleccionado
                             else if (hora_inicio_asignatura > hora_inicio_seleccion && hora_fin_asignatura < hora_fin_seleccion)
                             {
-                                horario_seleccionado[i] = ($"{Insercion.zero(hora_inicio_seleccion)}/{Insercion.zero(hora_inicio_asignatura)}", horario_seleccionado[i].Item2);
-                                horario_seleccionado.Add(($"{Insercion.zero(hora_fin_asignatura)}/{Insercion.zero(hora_fin_seleccion)}", horario_seleccionado[i].Item2));
+                                horario_seleccionado[i] = ($"{Insercion.zero(hora_inicio_seleccion)}/{Insercion.zero(hora_inicio_asignatura)}", dia);
+                                horario_seleccionado.Add(($"{Insercion.zero(hora_fin_asignatura)}/{Insercion.zero(hora_fin_seleccion)}", dia));
+                            }
+                            //si no hay espacio disponible para la hora, vease en el ejemplo, si opta por poner la hora 00/00 y se elimina mas adelante:
+                            //    __________      (horas seleccionadas)
+                            // __________________ (horas ocupadas)
+                            else if (hora_inicio_seleccion >= hora_inicio_asignatura && hora_fin_seleccion <= hora_fin_asignatura)
+                            {
+                                horario_seleccionado[i] = ("00/00", dia);
                             }
                         }
                     }
                 }
 
-                //horarios diponible sera igual horario seleccionado donde no hayan registros iguales, pues lo anterior valida los solapamientos, mas no
-                // cuando las horas iniciales y finales tanto ocupadas como seleccionadas son iguales.
-                horario_disponible = horario_seleccionado.Except(horas_ocupadas).ToList();
-               
-                
+                    //horarios diponible sera igual horario seleccionado donde no hayan registros iguales, pues lo anterior valida los solapamientos, mas no
+                    // cuando las horas iniciales y finales tanto ocupadas como seleccionadas son iguales.
+                    horario_seleccionado = horario_seleccionado.Where(horario => int.Parse(horario.Item1.Substring(3, 2)) - int.Parse(horario.Item1.Substring(0, 2)) > 0).ToList();
+                horario_disponible = horario_disponible.Except(horas_ocupadas).ToList();
+
                 return horario_disponible;
             }
         }
