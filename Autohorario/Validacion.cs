@@ -31,23 +31,23 @@ namespace Autohorario
                 }
             }
             //Se pasa horario seleccionado junto con otras informaciones para rellenar horario disponible
-            horario_disponible = Validarhoras(codigo_asignatura, id_profesor, horario_seleccionado);
+            horario_disponible = Validarhoras(codigo_asignatura, id_profesor, id_seccion,horario_seleccionado);
             //si el intervalo de horas es menor a 0, no se toma en cuenta
 
             //Se pasa horario semanal junto con otras informaciones para que horario semanal se corte segun las horas ocupadas
-            horario_dia_disponible = Validarhoras(codigo_asignatura, id_profesor, horario_dia_disponible);
+            horario_dia_disponible = Validarhoras(codigo_asignatura, id_profesor, id_seccion,horario_dia_disponible);
 
             //Si horario secundario no es nulo entonces la asignatura es hibrida o el profesor solo tiene una modalidad de horario seleccionado, por consiguiente se hace lo mismo para el horario secundario
             if (horario_secundario != null)
             {
-                horario_secundario_disponible = Validarhoras(codigo_asignatura, id_profesor, horario_secundario);
+                horario_secundario_disponible = Validarhoras(codigo_asignatura, id_profesor, id_seccion, horario_secundario);
                 horario_secundario_disponible = horario_secundario_disponible.Where(horario => int.Parse(horario.Item1.Substring(3, 2)) - int.Parse(horario.Item1.Substring(0, 2)) >= 2).ToList();
             }
             //cuando ya se validaron las horas disponible, se pasa a la sigueinte parte del algoritmo, la insercion.
             Insercion.data_insercion(horario_disponible, horario_dia_disponible, horario_secundario_disponible, horario_seleccionado, id_seccion, creditos_asignatura, modalidad);
         }
         //metodo para validar las horas disponibles
-        private static List<(string, int)> Validarhoras(string codigo_asignatura, int id_profesor, List<(string, int)> horario_seleccionado)
+        private static List<(string, int)> Validarhoras(string codigo_asignatura, int id_profesor, int id_seccion, List<(string, int)> horario_seleccionado)
         {
             //variables a usar.
             string instancia_hora = null;
@@ -62,6 +62,7 @@ namespace Autohorario
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@codigo_asignatura", codigo_asignatura);
                 cmd.Parameters.AddWithValue("@id_profesor", id_profesor);
+                cmd.Parameters.AddWithValue("@id_seccion", id_seccion);
 
                 //en el using se ejecutaa el data reader para rellenar la lista horas ocupadas con los datos que de datareader
                 using (SqlDataReader reader = cmd.ExecuteReader())
