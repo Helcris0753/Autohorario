@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -11,31 +12,17 @@ namespace Autohorario
         static private SqlConnection con = Obtencion.con;
 
         //metodo que obtiene la data necesaria para validad las horas disponibles 
-        public static void Getdata(string codigo_asignatura, int id_seccion, int creditos_asignatura, List<(string, int)> horario_seleccionado, int modalidad, int id_profesor, List<(string, int)> horario_secundario = null)
+        public static void Getdata(string codigo_asignatura, int id_seccion, int creditos_asignatura, List<(string, int)> horario_seleccionado, int modalidad, int id_profesor, List<(string, int)> horario_semanal_disponible,List<(string, int)> horario_secundario = null)
         {
             //listas necesarias para ser rellenadas de informacion
             List<(string, int)> horario_disponible = new List<(string, int)>();
-            List<(string, int)> horario_dia_disponible = new List<(string, int)>();
             List<(string, int)> horario_secundario_disponible = new List<(string, int)>();
 
-            //se rellena la lista que simula las horas disponibles durante la semana.
-            for (int i = 1; i < 7; i++)
-            {
-                if (i == 6)
-                {
-                    horario_dia_disponible.Add(("07/18", i));
-                }
-                else
-                {
-                    horario_dia_disponible.Add(("07/22", i));
-                }
-            }
             //Se pasa horario seleccionado junto con otras informaciones para rellenar horario disponible
             horario_disponible = Validarhoras(codigo_asignatura, id_profesor, id_seccion,horario_seleccionado);
-            //si el intervalo de horas es menor a 0, no se toma en cuenta
 
             //Se pasa horario semanal junto con otras informaciones para que horario semanal se corte segun las horas ocupadas
-            horario_dia_disponible = Validarhoras(codigo_asignatura, id_profesor, id_seccion,horario_dia_disponible);
+            horario_semanal_disponible = Validarhoras(codigo_asignatura, id_profesor, id_seccion,horario_semanal_disponible);
 
             //Si horario secundario no es nulo entonces la asignatura es hibrida o el profesor solo tiene una modalidad de horario seleccionado, por consiguiente se hace lo mismo para el horario secundario
             if (horario_secundario != null)
@@ -44,16 +31,17 @@ namespace Autohorario
                 horario_secundario_disponible = horario_secundario_disponible.Where(horario => int.Parse(horario.Item1.Substring(3, 2)) - int.Parse(horario.Item1.Substring(0, 2)) >= 2).ToList();
             }
             //cuando ya se validaron las horas disponible, se pasa a la sigueinte parte del algoritmo, la insercion.
-            Insercion.data_insercion(horario_disponible, horario_dia_disponible, horario_secundario_disponible, horario_seleccionado, id_seccion, creditos_asignatura, modalidad);
+            Insercion.data_insercion(horario_disponible, horario_semanal_disponible, horario_secundario_disponible, horario_seleccionado, id_seccion, creditos_asignatura, modalidad);
         }
         //metodo para validar las horas disponibles
-        private static List<(string, int)> Validarhoras(string codigo_asignatura, int id_profesor, int id_seccion, List<(string, int)> horario_seleccionado)
+        private static List<(string, int)> Validarhoras(string codigo_asignatura, int id_profesor, int id_seccion, List<(string, int)> h_s)
         {
             //variables a usar.
             string instancia_hora = null;
             int hora_inicio_seleccion, hora_fin_seleccion, hora_inicio_asignatura, hora_fin_asignatura, dia;
             List<(string, int)> horario_disponible = new List<(string, int)>();
             List<(string, int)> horas_ocupadas = new List<(string, int)>();
+            List<(string, int)> horario_seleccionado = h_s.ToList();
             //todo dentro del using pertenece al store procedure ppCheck_schedule las variables que se le pasan son el codigo de la asignatua y el id del profesor
             //este store procedure devuelve las horas coupadas por todas las asignaturas que estan junta a la asignatura cuyo codigo se paso
             //ademas, tambien se le pasa el id del profesor para evitar que si un profesor esta dando diferentes secciones de una misma asignatura, estan no choque
@@ -139,10 +127,10 @@ namespace Autohorario
                     }
                 }
 
-                horario_disponible = horario_seleccionado.Where(horario => int.Parse(horario.Item1.Substring(3, 2)) - int.Parse(horario.Item1.Substring(0, 2)) > 0).ToList();
-
+                
+                horario_disponible = horario_seleccionado.Where(horario => int.Parse(horario.Item1.Substring(3, 2)) - int.Parse(horario.Item1.Substring(0, 2)) > 0 ).ToList();
                 horario_disponible = horario_disponible.Except(horas_ocupadas).ToList();
-
+                
                 return horario_disponible;
             }
         }

@@ -9,9 +9,11 @@ namespace Autohorario
 {
     internal class Obtencion
     {
-        internal static SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["horarioslaptop"].ConnectionString);
+        internal static SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["horarioConexion"].ConnectionString);
         static void Main(string[] args)
         {
+            List<(string, int)> horario_semanal_disponible = new List<(string, int)>() {("07/22", 1), ("07/22", 2), ("07/22", 3), ("07/22", 4), ("07/22", 5), ("07/18", 6)};
+
             //clase para medir el tiempo de ejecucion del programa
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -47,7 +49,7 @@ namespace Autohorario
                         //el horario seleccionado sera igual a lo que devuelva "gethorarios_seleccionado", que es el metodo que recoge el horario que selecciono el profesor
                         horario_seleccionado = gethorarios_seleccionado(int.Parse(item[2].ToString()), int.Parse(item[4].ToString()));
                         //Despues que se obtuvo el horario, se va a la siguiente etapa del algoritmo, que es la validacion.
-                        Validacion.Getdata(item[0].ToString(), int.Parse(item[1].ToString()), int.Parse(item[3].ToString()), horario_seleccionado, int.Parse(item[4].ToString()), int.Parse(item[2].ToString()));
+                        Validacion.Getdata(item[0].ToString(), int.Parse(item[1].ToString()), int.Parse(item[3].ToString()), horario_seleccionado, int.Parse(item[4].ToString()), int.Parse(item[2].ToString()), horario_semanal_disponible);
                     }
                     else
                     {
@@ -57,12 +59,12 @@ namespace Autohorario
                         //si el profesor tiene tan solo un horario seleccionado de tipo presencial o virtual, tan solo se elegira eel horario_seleccionado, en caso contrario, se pasaran ambos.
                         if (horario_seleccionado.Equals(horario_secundario))
                         {
-                            Validacion.Getdata(item[0].ToString(), int.Parse(item[1].ToString()), int.Parse(item[3].ToString()), horario_seleccionado, int.Parse(item[4].ToString()), int.Parse(item[2].ToString()));
+                            Validacion.Getdata(item[0].ToString(), int.Parse(item[1].ToString()), int.Parse(item[3].ToString()), horario_seleccionado, int.Parse(item[4].ToString()), int.Parse(item[2].ToString()), horario_semanal_disponible);
 
                         }
                         else
                         {
-                            Validacion.Getdata(item[0].ToString(), int.Parse(item[1].ToString()), int.Parse(item[3].ToString()), horario_seleccionado, int.Parse(item[4].ToString()), int.Parse(item[2].ToString()), horario_secundario);
+                            Validacion.Getdata(item[0].ToString(), int.Parse(item[1].ToString()), int.Parse(item[3].ToString()), horario_seleccionado, int.Parse(item[4].ToString()), int.Parse(item[2].ToString()), horario_semanal_disponible,horario_secundario);
                         }
                     }
                 }
