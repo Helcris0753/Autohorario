@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 
 namespace Autohorario
 {
@@ -224,10 +225,13 @@ namespace Autohorario
                     break;
             }
         }
-        private static List<(bool, int)> validar_insercion(List<(string, int)> horario, int id_seccion, int horas, int estado_horas, int modaliidad, int dia1 = 0, int dia2 = 0)
+        private static List<(bool, int)> validar_insercion(List<(string, int)> horario_auxiliar, int id_seccion, int horas, int estado_horas, int modaliidad, int dia1 = 0, int dia2 = 0)
         {
             //variables a usar
+            Random random = new Random();
             List<(bool, int)> validar_insercion = new List<(bool, int)>();
+            List<(string, int)> horario = horario_auxiliar.ToList();
+            horario = horario.OrderBy(x => random.Next()).ToList();
             validar_insercion.Add((false, 0));
             int hora_inicio, hora_fin;
             for (int i = 0; i < horario.Count; i++)
