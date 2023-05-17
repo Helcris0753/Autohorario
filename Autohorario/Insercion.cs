@@ -13,8 +13,35 @@ namespace Autohorario
         public static void data_insercion(List<(string, int)> horario_presencial, List<(string, int)> horario_semanal_disponible, List<(string, int)> horario_virtual, List<(string, int)> horario_seleccionado, int id_seccion, int creditos_asignatura, int modalidad)
         {
             //variables que se van a usar
+            //Console.WriteLine("presencial");
+            //foreach ((string, int) item in horario_presencial)
+            //{
+            //    Console.WriteLine($"{item.Item1}    {item.Item2}");
+            //}
+            //Console.WriteLine("virtual");
+            //Console.WriteLine("__________________________________");
+            //foreach ((string, int) item in horario_virtual)
+            //{
+            //    Console.WriteLine($"{item.Item1}    {item.Item2}");
+
+            //}
+            //Console.WriteLine("disponible");
+            //Console.WriteLine("__________________________________");
+            //foreach ((string, int) item in horario_semanal_disponible)
+            //{
+            //    Console.WriteLine($"{item.Item1}    {item.Item2}");
+
+            //}
+            //Console.WriteLine("__________________________________");
+            //Console.ReadKey();
             List<(bool, int)> valida_insercion = new List<(bool, int)>();
-            int dia1 = 0, dia2 = 0, dia3;
+            List<(string, int)> nulo = new List<(string, int)>{("00/00", 0)};
+            List<List<(string, int)>> coleccion_horarios = new List<List<(string, int)>>();
+            coleccion_horarios.Add(modalidad != 2 ? horario_presencial : new List<(string, int)>());
+            coleccion_horarios.Add(horario_virtual);
+            coleccion_horarios.Add(horario_semanal_disponible);
+            coleccion_horarios.Add(horario_seleccionado);
+            int dia1 = 0, dia2 = 0, dia3 = 0;
             //las inserciones de las asignaturas dependeran de sus creditos.
             switch (creditos_asignatura)
             {
@@ -22,53 +49,73 @@ namespace Autohorario
                 case 0:
                 case 1:
                 case 2:
-                    //validar_insercion un metodo que me devuelve si se pudo insertar segun el horario seleccionado por el profesor previamente pasado por validacion
-                    // y el dia correspodiente donde se inserto
-                    valida_insercion = validar_insercion(horario_presencial, id_seccion, 2, 1, modalidad);
-                    if (!(valida_insercion[0].Item1))
-                    {
-                        //si no se pudo insertar con el horario disponible, se hace con el horario semanal disponible 
-                        valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 2, 2, modalidad);
-                        if (!(valida_insercion[0].Item1))
-                        {
-                            //si tampoco se pudo con el horario semanal disponible, es que el horario no tiene espacio, por lo que se colocara independientemente que choca.
-                            int hora_inicio = int.Parse(horario_seleccionado[0].Item1.Substring(0, 2));
-                            insertar(horario_seleccionado[0].Item2, id_seccion, 3, modalidad, $"{zero(hora_inicio)}/{zero(hora_inicio + 2)}");
-                        }
-                    }
+                       if (validar_horario(coleccion_horarios, id_seccion, 2, modalidad) == 0) 
+                            insertar(1, id_seccion, 3, modalidad);
                     break;
                 case 3:
                     //Se l mimso proceso que el anterior, por con tres creditos
-                    valida_insercion = validar_insercion(horario_presencial, id_seccion, 3, 1, modalidad);
-                    if (!(valida_insercion[0].Item1))
-                    {
-                        valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 3, 2, modalidad);
-                        if (!(valida_insercion[0].Item1))
-                        {
-                            int hora_inicio = int.Parse(horario_seleccionado[0].Item1.Substring(0, 2));
-                            insertar(horario_seleccionado[0].Item2, id_seccion, 3, modalidad, $"{zero(hora_inicio)}/{zero(hora_inicio + 2)}");
-                        }
-                    }
+                    if (validar_horario(coleccion_horarios, id_seccion, 3, modalidad) == 0)
+                        insertar(1, id_seccion, 3, modalidad);
                     break;
                 case 4:
                 case 5:
-                    List<List<(string, int)>> coleccion_horarios = new List<List<(string, int)>>();
-                    coleccion_horarios.Add(modalidad != 2 ? horario_presencial : new List<(string, int)>());
-                    coleccion_horarios.Add(horario_virtual);
-                    coleccion_horarios.Add(horario_semanal_disponible);
-                    coleccion_horarios.Add(horario_seleccionado);
-
                     switch (modalidad)
                     {
                         case 1:
-                            dia1 = validar_horario(coleccion_horarios, id_seccion, 2, modalidad);
-                            dia2 = validar_horario(coleccion_horarios, id_seccion, 2, modalidad, dia1);
-                            if (modalidad == 5) 
-                                dia3 = validar_horario(coleccion_horarios, id_seccion, 2, modalidad, dia1, dia2);
-                            break;
                         case 2:
+                            dia1 = validar_horario(coleccion_horarios, id_seccion, 2, modalidad);
+                            if(dia1 == 0) insertar(1, id_seccion, 3, modalidad);
+                            dia2 = validar_horario(coleccion_horarios, id_seccion, 2, modalidad, dia1);
+                            if (dia2 == 0) insertar(1, id_seccion, 3, modalidad);
+
+                            if (modalidad == 5)
+                                dia3 = validar_horario(coleccion_horarios, id_seccion, 1, modalidad, dia1, dia2);
                             break;
                         case 3:
+                            coleccion_horarios[1] = nulo.ToList();
+                            coleccion_horarios[2] = nulo.ToList();
+                            coleccion_horarios[3] = nulo.ToList();
+                            dia1 = validar_horario(coleccion_horarios, id_seccion, 2, 1);
+                            if (dia1 == 0)
+                            {
+                                coleccion_horarios[0] = nulo.ToList();
+                                coleccion_horarios[1] = horario_virtual;
+                                dia1 = validar_horario(coleccion_horarios, id_seccion, 2, 2);
+                                if (dia1 == 0)
+                                {
+                                    coleccion_horarios[1] = nulo.ToList();
+                                    coleccion_horarios[2] = horario_semanal_disponible;
+                                    coleccion_horarios[3] = horario_seleccionado;
+
+                                    dia1 = validar_horario(coleccion_horarios, id_seccion, 2, 1);
+                                    dia2 = validar_horario(coleccion_horarios, id_seccion, 2, 2, dia1);
+                                }
+                                else
+                                {
+                                    coleccion_horarios[2] = horario_semanal_disponible;
+                                    coleccion_horarios[3] = horario_seleccionado;
+
+                                    dia2 = validar_horario(coleccion_horarios, id_seccion, 2, 2, dia1);
+                                }
+                            }
+                            else
+                            {
+                                coleccion_horarios[0] = nulo.ToList();
+                                coleccion_horarios[1] = horario_virtual;
+                                dia2 = validar_horario(coleccion_horarios, id_seccion, 2, 2, dia1);
+                                if (dia2 == 0)
+                                {
+                                    coleccion_horarios[1] = nulo.ToList();
+                                    coleccion_horarios[2] = horario_semanal_disponible;
+                                    coleccion_horarios[3] = horario_seleccionado;
+
+                                    dia2 = validar_horario(coleccion_horarios, id_seccion, 2, 2, dia1);
+                                }
+                            }
+                            if (dia1 == 0) insertar(1, id_seccion, 3, 1);
+                            if (dia2 == 0) insertar(1, id_seccion, 3, 2);
+                            if (modalidad == 5)
+                                dia3 = validar_horario(coleccion_horarios, id_seccion, 1, modalidad, dia1, dia2);
                             break;
                     }
                     break;
@@ -108,7 +155,6 @@ namespace Autohorario
                     continue;
                 }
             }
-            insertar(1, id_seccion, 3, modalidad);
             return 0;
         }
         private static List<(bool, int)> validar_insercion(List<(string, int)> horario_auxiliar, int id_seccion, int horas, int estado_horas, int modalidad, int dia1 = 0, int dia2 = 0)
