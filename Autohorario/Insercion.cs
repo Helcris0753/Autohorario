@@ -10,11 +10,10 @@ namespace Autohorario
     {
         static private SqlConnection con = Obtencion.con;
 
-        public static void data_insercion(List<(string, int)> horario_disponible, List<(string, int)> horario_semanal_disponible, List<(string, int)> horario_secundario_disponible, List<(string, int)> horario_seleccionado, int id_seccion, int creditos_asignatura, int modalidad)
+        public static void data_insercion(List<(string, int)> horario_presencial, List<(string, int)> horario_semanal_disponible, List<(string, int)> horario_virtual, List<(string, int)> horario_seleccionado, int id_seccion, int creditos_asignatura, int modalidad)
         {
             //variables que se van a usar
             List<(bool, int)> valida_insercion = new List<(bool, int)>();
-            int dia1, dia2;
             //las inserciones de las asignaturas dependeran de sus creditos.
             switch (creditos_asignatura)
             {
@@ -24,7 +23,7 @@ namespace Autohorario
                 case 2:
                     //validar_insercion un metodo que me devuelve si se pudo insertar segun el horario seleccionado por el profesor previamente pasado por validacion
                     // y el dia correspodiente donde se inserto
-                    valida_insercion = validar_insercion(horario_disponible, id_seccion, 2, 1, modalidad);
+                    valida_insercion = validar_insercion(horario_presencial, id_seccion, 2, 1, modalidad);
                     if (!(valida_insercion[0].Item1))
                     {
                         //si no se pudo insertar con el horario disponible, se hace con el horario semanal disponible 
@@ -39,7 +38,7 @@ namespace Autohorario
                     break;
                 case 3:
                     //Se l mimso proceso que el anterior, por con tres creditos
-                    valida_insercion = validar_insercion(horario_disponible, id_seccion, 3, 1, modalidad);
+                    valida_insercion = validar_insercion(horario_presencial, id_seccion, 3, 1, modalidad);
                     if (!(valida_insercion[0].Item1))
                     {
                         valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 3, 2, modalidad);
@@ -53,179 +52,25 @@ namespace Autohorario
                 case 4:
                 case 5:
                     // Se verifica si la modalidad de la asignatura no es hibrida
-                    if (modalidad != 3)
+                    switch (modalidad)
                     {
-                        valida_insercion = validar_insercion(horario_disponible, id_seccion, 2, 1, modalidad);
-                        //dia 1 es el dia donde se inserto la hora
-                        dia1 = valida_insercion[0].Item2;
-                        if (!(valida_insercion[0].Item1))
-                        {
-                            valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 2, 2, modalidad);
-                            dia1 = valida_insercion[0].Item2;
-                            if (!(valida_insercion[0].Item1))
-                            {
-                                dia1 = horario_seleccionado[0].Item2;
-                                int hora_inicio = int.Parse(horario_seleccionado[0].Item1.Substring(0, 2));
-                                insertar(horario_seleccionado[0].Item2, id_seccion, 3, modalidad, $"{zero(hora_inicio)}/{zero(hora_inicio + 2)}");
-                            }
-                        }
-
-                        valida_insercion = validar_insercion(horario_disponible, id_seccion, 2, 1, modalidad, dia1);
-                        dia2 = valida_insercion[0].Item2;
-                        if (!(valida_insercion[0].Item1))
-                        {
-                            valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 2, 2, modalidad, dia1);
-                            dia2 = valida_insercion[0].Item2;
-                            if (!(valida_insercion[0].Item1))
-                            {
-                                for (int i = 0; i < horario_seleccionado.Count; i++)
-                                {
-                                    if (dia1 != horario_seleccionado[i].Item2)
-                                    {
-                                        dia2 = horario_seleccionado[i].Item2;
-                                        int hora_inicio = int.Parse(horario_seleccionado[i].Item1.Substring(0, 2));
-                                        insertar(horario_seleccionado[i].Item2, id_seccion, 3, modalidad, $"{zero(hora_inicio)}/{zero(hora_inicio + 2)}");
-                                    }
-                                }
-                            }
-                        }
-
-                        //si la materia tiene 5 creditos, entra aqui.
-                        if (creditos_asignatura == 5)
-                        {
-                            valida_insercion = validar_insercion(horario_disponible, id_seccion, 1, 1, modalidad, dia1, dia2);
-                            if (!(valida_insercion[0].Item1))
-                            {
-                                valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 1, 2, modalidad, dia1, dia2);
-                                if (!(valida_insercion[0].Item1))
-                                {
-                                    for (int i = 0; i < horario_seleccionado.Count; i++)
-                                    {
-                                        if (dia1 != horario_seleccionado[i].Item2 && dia2 != horario_seleccionado[i].Item2)
-                                        {
-                                            int hora_inicio = int.Parse(horario_seleccionado[i].Item1.Substring(0, 2));
-                                            insertar(horario_seleccionado[i].Item2, id_seccion, 3, modalidad, $"{zero(hora_inicio)}/{zero(hora_inicio + 1)}");
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        case 1:
+                            asignaturas_modalidad_presencial(horario_presencial, horario_virtual, horario_semanal_disponible, horario_seleccionado, id_seccion, creditos_asignatura);
+                            break;
+                        case 2:
+                            asignaturas_modalidad_virtual(horario_virtual, horario_semanal_disponible, horario_seleccionado, id_seccion, creditos_asignatura);
+                            break;
+                        case 3:
+                            asignaturas_modalidad_hibrida(horario_presencial, horario_virtual, horario_semanal_disponible, horario_seleccionado, id_seccion, creditos_asignatura);
+                            break;
                     }
-                    else
-                    {
-                        valida_insercion = validar_insercion(horario_disponible, id_seccion, 2, 1, 1);
-                        if (!(valida_insercion[0].Item1))
-                        {
-                            valida_insercion = validar_insercion(horario_secundario_disponible, id_seccion, 2, 1, 1);
-                            if (!(valida_insercion[0].Item1))
-                            {
-                                valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 2, 2, 1);
-                                if (!(valida_insercion[0].Item1))
-                                {
-                                    int hora_inicio = int.Parse(horario_seleccionado[0].Item1.Substring(0, 2));
-                                    insertar(horario_seleccionado[0].Item2, id_seccion, 3, modalidad, $"{zero(hora_inicio)}/{zero(hora_inicio + 2)}");
-                                }
-                            }
-
-                            dia1 = valida_insercion[0].Item2;
-                            valida_insercion = validar_insercion(horario_secundario_disponible, id_seccion, 2, 1, 2, dia1);
-                            if (!(valida_insercion[0].Item1))
-                            {
-                                valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 2, 2, 2, dia1);
-                                if (!(valida_insercion[0].Item1))
-                                {
-                                    for (int i = 0; i < horario_seleccionado.Count; i++)
-                                    {
-                                        if (dia1 != horario_seleccionado[i].Item2)
-                                        {
-                                            int hora_inicio = int.Parse(horario_seleccionado[i].Item1.Substring(0, 2));
-                                            insertar(horario_seleccionado[i].Item2, id_seccion, 3, modalidad, $"{zero(hora_inicio)}/{zero(hora_inicio + 2)}");
-                                        }
-                                    }
-                                }
-                            }
-
-                            if (creditos_asignatura == 5)
-                            {
-                                dia2 = valida_insercion[0].Item2;
-                                valida_insercion = validar_insercion(horario_disponible, id_seccion, 1, 1, 2, dia1, dia2);
-                                if (!(valida_insercion[0].Item1))
-                                {
-                                    valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 1, 2, 2, dia1, dia2);
-                                    if (!(valida_insercion[0].Item1))
-                                    {
-                                        for (int i = 0; i < horario_seleccionado.Count; i++)
-                                        {
-                                            if (dia1 != horario_seleccionado[i].Item2 && dia2 != horario_seleccionado[i].Item2)
-                                            {
-                                                int hora_inicio = int.Parse(horario_seleccionado[i].Item1.Substring(0, 2));
-                                                insertar(horario_seleccionado[i].Item2, id_seccion, 3, modalidad, $"{zero(hora_inicio)}/{zero(hora_inicio + 1)}");
-                                            }
-                                        }
-
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            dia1 = valida_insercion[0].Item2;
-                            valida_insercion = validar_insercion(horario_secundario_disponible, id_seccion, 2, 1, 2, dia1);
-                            if (!(valida_insercion[0].Item1))
-                            {
-                                valida_insercion = validar_insercion(horario_disponible, id_seccion, 2, 1, 2, dia1);
-                                if (!(valida_insercion[0].Item1))
-                                {
-                                    valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 2, 2, 2, dia1);
-                                    if (!(valida_insercion[0].Item1))
-                                    {
-                                        for (int i = 0; i < horario_seleccionado.Count; i++)
-                                        {
-                                            if (dia1 != horario_seleccionado[i].Item2)
-                                            {
-                                                int hora_inicio = int.Parse(horario_seleccionado[i].Item1.Substring(0, 2));
-                                                insertar(horario_seleccionado[i].Item2, id_seccion, 3, modalidad, $"{zero(hora_inicio)}/{zero(hora_inicio + 2)}");
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            if (creditos_asignatura == 5)
-                            {
-                                dia2 = valida_insercion[0].Item2;
-                                valida_insercion = validar_insercion(horario_secundario_disponible, id_seccion, 1, 1, 2, dia1, dia2);
-                                if (!(valida_insercion[0].Item1))
-                                {
-                                    valida_insercion = validar_insercion(horario_disponible, id_seccion, 1, 1, 2, dia1, dia2);
-                                    if (!(valida_insercion[0].Item1))
-                                    {
-                                        valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 1, 2, 2, dia1, dia2);
-                                        if (!(valida_insercion[0].Item1))
-                                        {
-                                            for (int i = 0; i < horario_seleccionado.Count; i++)
-                                            {
-                                                if (dia1 != horario_seleccionado[i].Item2 && dia2 != horario_seleccionado[i].Item2)
-                                                {
-                                                    int hora_inicio = int.Parse(horario_seleccionado[i].Item1.Substring(0, 2));
-                                                    insertar(horario_seleccionado[i].Item2, id_seccion, 3, modalidad, $"{zero(hora_inicio)}/{zero(hora_inicio + 1)}");
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                    }
-
                     break;
                 default:
-                    insertar(0, id_seccion, 3, 0);
+                    insertar(1, id_seccion, 3, 0);
                     break;
             }
         }
-        private static List<(bool, int)> validar_insercion(List<(string, int)> horario_auxiliar, int id_seccion, int horas, int estado_horas, int modaliidad, int dia1 = 0, int dia2 = 0)
+        private static List<(bool, int)> validar_insercion(List<(string, int)> horario_auxiliar, int id_seccion, int horas, int estado_horas, int modalidad, int dia1 = 0, int dia2 = 0)
         {
             //variables a usar
             Random random = new Random();
@@ -240,12 +85,261 @@ namespace Autohorario
                 hora_fin = int.Parse(horario[i].Item1.Substring(3, 2));
                 if (horario[i].Item2 != dia1 && horario[i].Item2 != dia2 && (hora_fin - hora_inicio) >= horas)
                 {
-                    insertar(horario[i].Item2, id_seccion, estado_horas, modaliidad, $"{zero(hora_inicio)}/{zero(hora_inicio + horas)}");
+                    insertar(horario[i].Item2, id_seccion, estado_horas, modalidad, $"{zero(hora_inicio)}/{zero(hora_inicio + horas)}");
                     validar_insercion[0] = (true, horario[i].Item2);
                     return validar_insercion;
                 }
             }
             return validar_insercion;
+        }
+
+        private static void asignaturas_modalidad_virtual(List<(string, int)> horario_virtual, List<(string, int)> horario_semanal_disponible, List<(string, int)> horario_seleccionado, int id_seccion, int creditos)
+        {
+            int dia1, dia2;
+            List<(bool, int)> valida_insercion = new List<(bool, int)>();
+            valida_insercion = validar_insercion(horario_virtual, id_seccion, 2, 1, 1);
+            dia1 = valida_insercion[0].Item2;
+            if (!(valida_insercion[0].Item1))
+            {
+                valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 2, 2, 1);
+                dia1 = valida_insercion[0].Item2;
+                if (!(valida_insercion[0].Item1))
+                {
+                    dia1 = horario_seleccionado[0].Item2;
+                    int hora_inicio = int.Parse(horario_seleccionado[0].Item1.Substring(0, 2));
+                    insertar(horario_seleccionado[0].Item2, id_seccion, 3, 1, $"{zero(hora_inicio)}/{zero(hora_inicio + 2)}");
+                }
+            }
+
+            valida_insercion = validar_insercion(horario_virtual, id_seccion, 2, 1, 1, dia1);
+            dia2 = valida_insercion[0].Item2;
+            if (!(valida_insercion[0].Item1))
+            {
+                valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 2, 2, 1, dia1);
+                dia2 = valida_insercion[0].Item2;
+                if (!(valida_insercion[0].Item1))
+                {
+                    for (int i = 0; i < horario_seleccionado.Count; i++)
+                    {
+                        if (dia1 != horario_seleccionado[i].Item2)
+                        {
+                            dia2 = horario_seleccionado[i].Item2;
+                            int hora_inicio = int.Parse(horario_seleccionado[i].Item1.Substring(0, 2));
+                            insertar(horario_seleccionado[i].Item2, id_seccion, 3, 1, $"{zero(hora_inicio)}/{zero(hora_inicio + 2)}");
+                        }
+                    }
+                }
+            }
+
+            if (creditos == 5)
+            {
+                valida_insercion = validar_insercion(horario_virtual, id_seccion, 1, 1, 1, dia1, dia2);
+                if (!(valida_insercion[0].Item1))
+                {
+                    valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 1, 2, 1, dia1, dia2);
+                    if (!(valida_insercion[0].Item1))
+                    {
+                        for (int i = 0; i < horario_seleccionado.Count; i++)
+                        {
+                            if (dia1 != horario_seleccionado[i].Item2 && dia2 != horario_seleccionado[i].Item2)
+                            {
+                                int hora_inicio = int.Parse(horario_seleccionado[i].Item1.Substring(0, 2));
+                                insertar(horario_seleccionado[i].Item2, id_seccion, 3, 1, $"{zero(hora_inicio)}/{zero(hora_inicio + 1)}");
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private static void asignaturas_modalidad_presencial(List<(string, int)> horario_presencial, List<(string, int)> horario_virtual, List<(string, int)> horario_semanal_disponible, List<(string, int)> horario_seleccionado, int id_seccion, int creditos)
+        {
+            int dia1, dia2;
+            List<(bool, int)> valida_insercion = new List<(bool, int)>();
+            valida_insercion = validar_insercion(horario_presencial, id_seccion, 2, 1, 2);
+            dia1 = valida_insercion[0].Item2;
+            if (!(valida_insercion[0].Item1))
+            {
+                valida_insercion = validar_insercion(horario_virtual, id_seccion, 2, 1, 2);
+                dia1 = valida_insercion[0].Item2;
+                if (!(valida_insercion[0].Item1))
+                {
+                    valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 2, 2, 2);
+                    dia1 = valida_insercion[0].Item2;
+                    if (!(valida_insercion[0].Item1))
+                    {
+                        dia1 = horario_seleccionado[0].Item2;
+                        int hora_inicio = int.Parse(horario_seleccionado[0].Item1.Substring(0, 2));
+                        insertar(horario_seleccionado[0].Item2, id_seccion, 3, 1, $"{zero(hora_inicio)}/{zero(hora_inicio + 2)}");
+                    }
+                }
+            }
+
+            valida_insercion = validar_insercion(horario_presencial, id_seccion, 2, 1, 2, dia1);
+            dia2 = valida_insercion[0].Item2;
+            if (!(valida_insercion[0].Item1))
+            {
+                valida_insercion = validar_insercion(horario_virtual, id_seccion, 2, 1, 2, dia1);
+                dia2 = valida_insercion[0].Item2;
+                if (!(valida_insercion[0].Item1))
+                {
+                    valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 2, 2, 2, dia1);
+                    dia2 = valida_insercion[0].Item2;
+                    if (!(valida_insercion[0].Item1))
+                    {
+                        for (int i = 0; i < horario_seleccionado.Count; i++)
+                        {
+                            if (dia1 != horario_seleccionado[i].Item2)
+                            {
+                                dia2 = horario_seleccionado[i].Item2;
+                                int hora_inicio = int.Parse(horario_seleccionado[i].Item1.Substring(0, 2));
+                                insertar(horario_seleccionado[i].Item2, id_seccion, 3, 1, $"{zero(hora_inicio)}/{zero(hora_inicio + 2)}");
+                            }
+                        }
+                    }
+                }
+                
+            }
+
+            if (creditos == 5)
+            {
+                valida_insercion = validar_insercion(horario_presencial, id_seccion, 1, 1, 2, dia1, dia2);
+                if (!(valida_insercion[0].Item1))
+                {
+                    valida_insercion = validar_insercion(horario_virtual, id_seccion, 1, 1, 2, dia1, dia2);
+                    if (!(valida_insercion[0].Item1))
+                    {
+                        valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 1, 2, 2, dia1, dia2);
+                        if (!(valida_insercion[0].Item1))
+                        {
+                            for (int i = 0; i < horario_seleccionado.Count; i++)
+                            {
+                                if (dia1 != horario_seleccionado[i].Item2 && dia2 != horario_seleccionado[i].Item2)
+                                {
+                                    int hora_inicio = int.Parse(horario_seleccionado[i].Item1.Substring(0, 2));
+                                    insertar(horario_seleccionado[i].Item2, id_seccion, 3, 1, $"{zero(hora_inicio)}/{zero(hora_inicio + 1)}");
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private static void asignaturas_modalidad_hibrida(List<(string, int)> horario_presencial, List<(string, int)> horario_virtual, List<(string, int)> horario_semanal_disponible, List<(string, int)> horario_seleccionado, int id_seccion, int creditos)
+        {
+            int dia1, dia2;
+            List<(bool, int)> valida_insercion = new List<(bool, int)>();
+
+            valida_insercion = validar_insercion(horario_presencial, id_seccion, 2, 1, 2);
+            dia1 = valida_insercion[0].Item2;
+            valida_insercion = validar_insercion(horario_presencial, id_seccion, 2, 1, 1);
+            if (!(valida_insercion[0].Item1))
+            {
+                valida_insercion = validar_insercion(horario_virtual, id_seccion, 2, 1, 1);
+                if (!(valida_insercion[0].Item1))
+                {
+                    valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 2, 2, 1);
+                    if (!(valida_insercion[0].Item1))
+                    {
+                        int hora_inicio = int.Parse(horario_seleccionado[0].Item1.Substring(0, 2));
+                        insertar(horario_seleccionado[0].Item2, id_seccion, 3, 1, $"{zero(hora_inicio)}/{zero(hora_inicio + 2)}");
+                    }
+                }
+
+                dia1 = valida_insercion[0].Item2;
+                valida_insercion = validar_insercion(horario_virtual, id_seccion, 2, 1, 2, dia1);
+                if (!(valida_insercion[0].Item1))
+                {
+                    valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 2, 2, 2, dia1);
+                    if (!(valida_insercion[0].Item1))
+                    {
+                        for (int i = 0; i < horario_seleccionado.Count; i++)
+                        {
+                            if (dia1 != horario_seleccionado[i].Item2)
+                            {
+                                int hora_inicio = int.Parse(horario_seleccionado[i].Item1.Substring(0, 2));
+                                insertar(horario_seleccionado[i].Item2, id_seccion, 3, 1, $"{zero(hora_inicio)}/{zero(hora_inicio + 2)}");
+                            }
+                        }
+                    }
+                }
+
+                if (creditos == 5)
+                {
+                    dia2 = valida_insercion[0].Item2;
+                    valida_insercion = validar_insercion(horario_presencial, id_seccion, 1, 1, 2, dia1, dia2);
+                    if (!(valida_insercion[0].Item1))
+                    {
+                        valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 1, 2, 2, dia1, dia2);
+                        if (!(valida_insercion[0].Item1))
+                        {
+                            for (int i = 0; i < horario_seleccionado.Count; i++)
+                            {
+                                if (dia1 != horario_seleccionado[i].Item2 && dia2 != horario_seleccionado[i].Item2)
+                                {
+                                    int hora_inicio = int.Parse(horario_seleccionado[i].Item1.Substring(0, 2));
+                                    insertar(horario_seleccionado[i].Item2, id_seccion, 3, 1, $"{zero(hora_inicio)}/{zero(hora_inicio + 1)}");
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+            else
+            {
+                dia1 = valida_insercion[0].Item2;
+                valida_insercion = validar_insercion(horario_virtual, id_seccion, 2, 1, 2, dia1);
+                if (!(valida_insercion[0].Item1))
+                {
+                    valida_insercion = validar_insercion(horario_presencial, id_seccion, 2, 1, 2, dia1);
+                    if (!(valida_insercion[0].Item1))
+                    {
+                        valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 2, 2, 2, dia1);
+                        if (!(valida_insercion[0].Item1))
+                        {
+                            for (int i = 0; i < horario_seleccionado.Count; i++)
+                            {
+                                if (dia1 != horario_seleccionado[i].Item2)
+                                {
+                                    int hora_inicio = int.Parse(horario_seleccionado[i].Item1.Substring(0, 2));
+                                    insertar(horario_seleccionado[i].Item2, id_seccion, 3, 1, $"{zero(hora_inicio)}/{zero(hora_inicio + 2)}");
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (creditos == 5)
+                {
+                    dia2 = valida_insercion[0].Item2;
+                    valida_insercion = validar_insercion(horario_virtual, id_seccion, 1, 1, 2, dia1, dia2);
+                    if (!(valida_insercion[0].Item1))
+                    {
+                        valida_insercion = validar_insercion(horario_presencial, id_seccion, 1, 1, 2, dia1, dia2);
+                        if (!(valida_insercion[0].Item1))
+                        {
+                            valida_insercion = validar_insercion(horario_semanal_disponible, id_seccion, 1, 2, 2, dia1, dia2);
+                            if (!(valida_insercion[0].Item1))
+                            {
+                                for (int i = 0; i < horario_seleccionado.Count; i++)
+                                {
+                                    if (dia1 != horario_seleccionado[i].Item2 && dia2 != horario_seleccionado[i].Item2)
+                                    {
+                                        int hora_inicio = int.Parse(horario_seleccionado[i].Item1.Substring(0, 2));
+                                        insertar(horario_seleccionado[i].Item2, id_seccion, 3, 1, $"{zero(hora_inicio)}/{zero(hora_inicio + 1)}");
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+
+
+
+                }
+            }
         }
 
         private static void insertar(int id_dia, int id_seccion, int estado_hora, int modalidad, string hora = null)

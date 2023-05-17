@@ -33,8 +33,8 @@ namespace Autohorario
                 adapter.Fill(ds);
 
                 //creo dos listas que se rellenaran con los horarios se selecciono el profesor, la primera es para cuando la modalidad de la seccion y del horario que selecciono el profesor coincidan y la segunda es para los horarios hibridos
-                List<(string, int)> horario_seleccionado = new List<(string, int)>();
-                List<(string, int)> horario_secundario = new List<(string, int)>();
+                List<(string, int)> horario_presencial = new List<(string, int)>();
+                List<(string, int)> horario_virtual = new List<(string, int)>();
                 //un foreach que va elemento por elemento del dataset rellenado anteriormente
                 //item 0 codigo_asignatura
                 //item 1 id_seccion
@@ -43,30 +43,9 @@ namespace Autohorario
                 //item 4 id_modalidad
                 foreach (DataRow item in ds.Tables[0].Rows)
                 {
-                    //para comprar si no es una seccion hibrida la que se esta trabajando
-                    if (int.Parse(item[4].ToString()) != 3)
-                    {
-                        //el horario seleccionado sera igual a lo que devuelva "gethorarios_seleccionado", que es el metodo que recoge el horario que selecciono el profesor
-                        horario_seleccionado = gethorarios_seleccionado(int.Parse(item[2].ToString()), int.Parse(item[4].ToString()));
-                        //Despues que se obtuvo el horario, se va a la siguiente etapa del algoritmo, que es la validacion.
-                        Validacion.Getdata(item[0].ToString(), int.Parse(item[1].ToString()), int.Parse(item[3].ToString()), horario_seleccionado, int.Parse(item[4].ToString()), int.Parse(item[2].ToString()), horario_semanal_disponible);
-                    }
-                    else
-                    {
-                        //si la seccion es hibrida, tomara ambos horarios seleccionados, tanto el presencial como el virtual.
-                        horario_seleccionado = gethorarios_seleccionado(int.Parse(item[2].ToString()), 1);
-                        horario_secundario = gethorarios_seleccionado(int.Parse(item[2].ToString()), 2);
-                        //si el profesor tiene tan solo un horario seleccionado de tipo presencial o virtual, tan solo se elegira eel horario_seleccionado, en caso contrario, se pasaran ambos.
-                        if (horario_seleccionado.Equals(horario_secundario))
-                        {
-                            Validacion.Getdata(item[0].ToString(), int.Parse(item[1].ToString()), int.Parse(item[3].ToString()), horario_seleccionado, int.Parse(item[4].ToString()), int.Parse(item[2].ToString()), horario_semanal_disponible);
-
-                        }
-                        else
-                        {
-                            Validacion.Getdata(item[0].ToString(), int.Parse(item[1].ToString()), int.Parse(item[3].ToString()), horario_seleccionado, int.Parse(item[4].ToString()), int.Parse(item[2].ToString()), horario_semanal_disponible,horario_secundario);
-                        }
-                    }
+                    horario_presencial = gethorarios_seleccionado(int.Parse(item[2].ToString()), 1);
+                    horario_virtual = gethorarios_seleccionado(int.Parse(item[2].ToString()), 2);
+                    Validacion.Getdata(item[0].ToString(), int.Parse(item[1].ToString()), int.Parse(item[3].ToString()), horario_presencial, int.Parse(item[4].ToString()), int.Parse(item[2].ToString()), horario_semanal_disponible, horario_virtual);
                 }
             }
             //cierre de la conexion
