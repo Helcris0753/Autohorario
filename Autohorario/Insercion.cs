@@ -9,31 +9,12 @@ namespace Autohorario
     internal class Insercion
     {
         static private SqlConnection con = Obtencion.con;
+        static private Random random = new Random();
 
         public static void data_insercion(List<(string, int)> horario_presencial, List<(string, int)> horario_semanal_disponible, List<(string, int)> horario_virtual, List<(string, int)> horario_seleccionado, int id_seccion, int creditos_asignatura, int modalidad)
         {
             //variables que se van a usar
-            //Console.WriteLine("presencial");
-            //foreach ((string, int) item in horario_presencial)
-            //{
-            //    Console.WriteLine($"{item.Item1}    {item.Item2}");
-            //}
-            //Console.WriteLine("virtual");
-            //Console.WriteLine("__________________________________");
-            //foreach ((string, int) item in horario_virtual)
-            //{
-            //    Console.WriteLine($"{item.Item1}    {item.Item2}");
-
-            //}
-            //Console.WriteLine("disponible");
-            //Console.WriteLine("__________________________________");
-            //foreach ((string, int) item in horario_semanal_disponible)
-            //{
-            //    Console.WriteLine($"{item.Item1}    {item.Item2}");
-
-            //}
-            //Console.WriteLine("__________________________________");
-            //Console.ReadKey();
+            
             List<(bool, int)> valida_insercion = new List<(bool, int)>();
             List<(string, int)> nulo = new List<(string, int)>{("00/00", 0)};
             List<List<(string, int)>> coleccion_horarios = new List<List<(string, int)>>();
@@ -126,27 +107,19 @@ namespace Autohorario
         }
 
         private static int validar_horario(List<List<(string, int)>> coleccion_horarios, int id_seccion, int horas, int modalidad, int dia1 = 0, int dia2 = 0) {
+            
             List<(string, int)> horario = new List<(string, int)> ();
             List<(bool, int)> validar = new List<(bool, int)> ();
-            int estado_horas = 0;
             for (int i = 0; i < coleccion_horarios.Count; i++)
             {
-                switch (i)
+                horario = coleccion_horarios[i].ToList();
+
+                if (i == 3)
                 {
-                    case 0:
-                    case 1:
-                        estado_horas = 1; 
-                        break;
-                    case 2:
-                        estado_horas = 2;
-                        break;
-                    case 3:
-                        estado_horas = 3;
-                        break;
+
                 }
 
-                horario = coleccion_horarios[i].ToList();
-                validar = validar_insercion(horario, id_seccion, horas, estado_horas, modalidad, dia1, dia2);
+                validar = validar_insercion(horario, id_seccion, horas, i < 2 ? 1 : i, modalidad, dia1, dia2);
                 if (validar.First().Item1){
                     return validar.First().Item2;
                 }
@@ -160,7 +133,6 @@ namespace Autohorario
         private static List<(bool, int)> validar_insercion(List<(string, int)> horario_auxiliar, int id_seccion, int horas, int estado_horas, int modalidad, int dia1 = 0, int dia2 = 0)
         {
             //variables a usar
-            Random random = new Random();
             List<(bool, int)> validar_insercion = new List<(bool, int)>();
             List<(string, int)> horario = horario_auxiliar.ToList();
             horario = horario.OrderBy(x => random.Next()).ToList();
@@ -168,8 +140,21 @@ namespace Autohorario
             int hora_inicio, hora_fin;
             for (int i = 0; i < horario.Count; i++)
             {
+
                 hora_inicio = int.Parse(horario[i].Item1.Substring(0, 2));
                 hora_fin = int.Parse(horario[i].Item1.Substring(3, 2));
+                if (estado_horas == 3 && (hora_fin - hora_inicio) >= horas && horario[i].Item2 != dia1 && horario[i].Item2 != dia2)
+                {
+                    do
+                    {
+                        hora_inicio = random.Next(hora_inicio, hora_fin);
+                        hora_fin = random.Next(hora_inicio, hora_fin+1);
+                    } while (hora_fin - hora_inicio < horas);
+                    insertar(horario[i].Item2, id_seccion, estado_horas, modalidad, $"{zero(hora_inicio)}/{zero(hora_inicio + horas)}");
+                    validar_insercion[0] = (true, horario[i].Item2);
+                    return validar_insercion;
+                }
+
                 if (horario[i].Item2 != dia1 && horario[i].Item2 != dia2 && (hora_fin - hora_inicio) >= horas)
                 {
                     insertar(horario[i].Item2, id_seccion, estado_horas, modalidad, $"{zero(hora_inicio)}/{zero(hora_inicio + horas)}");
@@ -179,9 +164,6 @@ namespace Autohorario
             }
             return validar_insercion;
         }
-
-        
-
         private static void insertar(int id_dia, int id_seccion, int estado_hora, int modalidad, string hora = null)
         {
             int version_trimestral = 0;
@@ -195,8 +177,15 @@ namespace Autohorario
 
                 //Console.WriteLine($"{hora}  {id_dia}  {id_seccion}");
                 cmd.CommandType = CommandType.StoredProcedure;
+                if (hora == null)
+                {
+                    cmd.Parameters.AddWithValue("@hora", DBNull.Value);
 
-                cmd.Parameters.AddWithValue("@hora", hora);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@hora", hora);
+                }
                 cmd.Parameters.AddWithValue("@id_dia", id_dia);
                 cmd.Parameters.AddWithValue("@id_seccion", id_seccion);
                 cmd.Parameters.AddWithValue("@estado_hora", estado_hora);
