@@ -143,23 +143,28 @@ namespace Autohorario
 
                 hora_inicio = int.Parse(horario[i].Item1.Substring(0, 2));
                 hora_fin = int.Parse(horario[i].Item1.Substring(3, 2));
-                if (estado_horas == 3 && (hora_fin - hora_inicio) >= horas && horario[i].Item2 != dia1 && horario[i].Item2 != dia2)
+                if (estado_horas == 3)
                 {
-                    do
+                    if ((hora_fin - hora_inicio) >= horas && horario[i].Item2 != dia1 && horario[i].Item2 != dia2)
                     {
-                        hora_inicio = random.Next(hora_inicio, hora_fin);
-                        hora_fin = random.Next(hora_inicio, hora_fin+1);
-                    } while (hora_fin - hora_inicio < horas);
-                    insertar(horario[i].Item2, id_seccion, estado_horas, modalidad, $"{zero(hora_inicio)}/{zero(hora_inicio + horas)}");
-                    validar_insercion[0] = (true, horario[i].Item2);
-                    return validar_insercion;
+                        do
+                        {
+                            hora_inicio = random.Next(hora_inicio, hora_fin);
+                            hora_fin = random.Next(hora_inicio, hora_fin + 1);
+                        } while (hora_fin - hora_inicio < horas);
+                        insertar(horario[i].Item2, id_seccion, estado_horas, modalidad, $"{zero(hora_inicio)}/{zero(hora_inicio + horas)}");
+                        validar_insercion[0] = (true, horario[i].Item2);
+                        return validar_insercion;
+                    }
                 }
-
-                if (horario[i].Item2 != dia1 && horario[i].Item2 != dia2 && (hora_fin - hora_inicio) >= horas)
+                else
                 {
-                    insertar(horario[i].Item2, id_seccion, estado_horas, modalidad, $"{zero(hora_inicio)}/{zero(hora_inicio + horas)}");
-                    validar_insercion[0] = (true, horario[i].Item2);
-                    return validar_insercion;
+                    if (horario[i].Item2 != dia1 && horario[i].Item2 != dia2 && (hora_fin - hora_inicio) >= horas)
+                    {
+                        insertar(horario[i].Item2, id_seccion, estado_horas, modalidad, $"{zero(hora_inicio)}/{zero(hora_inicio + horas)}");
+                        validar_insercion[0] = (true, horario[i].Item2);
+                        return validar_insercion;
+                    }
                 }
             }
             return validar_insercion;
