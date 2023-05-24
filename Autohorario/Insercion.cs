@@ -24,30 +24,7 @@ namespace Autohorario
             coleccion_horarios.Add(horario_seleccionado.ToList());
             int dia1 = 0, dia2 = 0, dia3 = 0;
             //las inserciones de las asignaturas dependeran de sus creditos.
-            if (id_seccion == 8503)
-            {
-                Console.WriteLine("Presencial");
-                for (int i = 0; i < horario_presencial.Count; i++)
-                {
-                    Console.WriteLine(horario_presencial[i].Item1 + ' ' + horario_presencial[i].Item2);
-                }
-                Console.WriteLine("virtual");
-                for (int i = 0; i < horario_virtual.Count; i++)
-                {
-                    Console.WriteLine(horario_virtual[i].Item1 + ' ' + horario_virtual[i].Item2);
-                }
-                Console.WriteLine("semanal");
-                for (int i = 0; i < horario_semanal_disponible.Count; i++)
-                {
-                    Console.WriteLine(horario_semanal_disponible[i].Item1 + ' ' + horario_semanal_disponible[i].Item2);
-                }
-                Console.WriteLine("seleccionado");
-                for (int i = 0; i < horario_seleccionado.Count; i++)
-                {
-                    Console.WriteLine(horario_seleccionado[i].Item1 + ' ' + horario_seleccionado[i].Item2);
-                }
-                Console.WriteLine("_____________________________________");
-            }
+            
 
             switch (creditos_asignatura)
             {
