@@ -128,16 +128,6 @@ namespace Autohorario
                 {
                     estado_horas = i;
                 }
-
-                if (id_seccion == 8504)
-                {
-                    Console.WriteLine("ver");
-                    for (int j = 0; j < horario.Count; j++)
-                    {
-                        Console.WriteLine(i + "     " + horario[j].Item1 + ' ' + horario[j].Item2 + ' ' + estado_horas + "  " + modalidad);
-                    }
-                    Console.WriteLine("_____________________________________");
-                }
                     validar = validar_insercion(horario, id_seccion, horas, i == 0 ? 1 : estado_horas, modalidad, dia1, dia2);
                 if (validar.First().Item1){
                     return validar.First().Item2;
