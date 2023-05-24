@@ -18,14 +18,40 @@ namespace Autohorario
             List<(bool, int)> valida_insercion = new List<(bool, int)>();
             List<(string, int)> nulo = new List<(string, int)>{("00/00", 0)};
             List<List<(string, int)>> coleccion_horarios = new List<List<(string, int)>>();
-            coleccion_horarios.Add(modalidad != 2 ? horario_presencial : new List<(string, int)>());
-            coleccion_horarios.Add(horario_virtual);
-            coleccion_horarios.Add(horario_semanal_disponible);
-            coleccion_horarios.Add(horario_seleccionado);
+            coleccion_horarios.Add(horario_presencial.ToList());
+            coleccion_horarios.Add(horario_virtual.ToList());
+            coleccion_horarios.Add(horario_semanal_disponible.ToList());
+            coleccion_horarios.Add(horario_seleccionado.ToList());
             int dia1 = 0, dia2 = 0, dia3 = 0;
             //las inserciones de las asignaturas dependeran de sus creditos.
+            if (id_seccion == 8503)
+            {
+                Console.WriteLine("Presencial");
+                for (int i = 0; i < horario_presencial.Count; i++)
+                {
+                    Console.WriteLine(horario_presencial[i].Item1 + ' ' + horario_presencial[i].Item2);
+                }
+                Console.WriteLine("virtual");
+                for (int i = 0; i < horario_virtual.Count; i++)
+                {
+                    Console.WriteLine(horario_virtual[i].Item1 + ' ' + horario_virtual[i].Item2);
+                }
+                Console.WriteLine("semanal");
+                for (int i = 0; i < horario_semanal_disponible.Count; i++)
+                {
+                    Console.WriteLine(horario_semanal_disponible[i].Item1 + ' ' + horario_semanal_disponible[i].Item2);
+                }
+                Console.WriteLine("seleccionado");
+                for (int i = 0; i < horario_seleccionado.Count; i++)
+                {
+                    Console.WriteLine(horario_seleccionado[i].Item1 + ' ' + horario_seleccionado[i].Item2);
+                }
+                Console.WriteLine("_____________________________________");
+            }
+
             switch (creditos_asignatura)
             {
+
                 //las asignaturas de 0 a 2 creditos requieren metodos de insercion iguales
                 case 0:
                 case 1:
@@ -59,36 +85,34 @@ namespace Autohorario
                             dia1 = validar_horario(coleccion_horarios, id_seccion, 2, 1);
                             if (dia1 == 0)
                             {
-                                coleccion_horarios[0] = nulo.ToList();
-                                coleccion_horarios[1] = horario_virtual;
+                                coleccion_horarios[1] = horario_virtual.ToList();
                                 dia1 = validar_horario(coleccion_horarios, id_seccion, 2, 2);
                                 if (dia1 == 0)
                                 {
+                                    coleccion_horarios[0] = nulo.ToList();
                                     coleccion_horarios[1] = nulo.ToList();
-                                    coleccion_horarios[2] = horario_semanal_disponible;
-                                    coleccion_horarios[3] = horario_seleccionado;
+                                    coleccion_horarios[2] = horario_semanal_disponible.ToList();
+                                    coleccion_horarios[3] = horario_seleccionado.ToList();
 
                                     dia1 = validar_horario(coleccion_horarios, id_seccion, 2, 1);
                                     dia2 = validar_horario(coleccion_horarios, id_seccion, 2, 2, dia1);
                                 }
                                 else
                                 {
-                                    coleccion_horarios[2] = horario_semanal_disponible;
-                                    coleccion_horarios[3] = horario_seleccionado;
+                                    coleccion_horarios[2] = horario_semanal_disponible.ToList();
+                                    coleccion_horarios[3] = horario_seleccionado.ToList();
 
                                     dia2 = validar_horario(coleccion_horarios, id_seccion, 2, 2, dia1);
                                 }
                             }
                             else
                             {
-                                coleccion_horarios[0] = nulo.ToList();
-                                coleccion_horarios[1] = horario_virtual;
+                                coleccion_horarios[1] = horario_virtual.ToList();
                                 dia2 = validar_horario(coleccion_horarios, id_seccion, 2, 2, dia1);
                                 if (dia2 == 0)
                                 {
-                                    coleccion_horarios[1] = nulo.ToList();
-                                    coleccion_horarios[2] = horario_semanal_disponible;
-                                    coleccion_horarios[3] = horario_seleccionado;
+                                    coleccion_horarios[2] = horario_semanal_disponible.ToList();
+                                    coleccion_horarios[3] = horario_seleccionado.ToList();
 
                                     dia2 = validar_horario(coleccion_horarios, id_seccion, 2, 2, dia1);
                                 }
@@ -110,16 +134,34 @@ namespace Autohorario
             
             List<(string, int)> horario = new List<(string, int)> ();
             List<(bool, int)> validar = new List<(bool, int)> ();
+            int estado_horas = 0;
             for (int i = 0; i < coleccion_horarios.Count; i++)
             {
                 horario = coleccion_horarios[i].ToList();
 
-                if (i == 3)
+                if (i < 2 && modalidad != 1)
                 {
-
+                    estado_horas = 1;
+                }
+                else if (i > 0 && i < 3 && modalidad == 1)
+                {
+                    estado_horas = 2;
+                }
+                else
+                {
+                    estado_horas = i;
                 }
 
-                validar = validar_insercion(horario, id_seccion, horas, i < 2 ? 1 : i, modalidad, dia1, dia2);
+                if (id_seccion == 8504)
+                {
+                    Console.WriteLine("ver");
+                    for (int j = 0; j < horario.Count; j++)
+                    {
+                        Console.WriteLine(i + "     " + horario[j].Item1 + ' ' + horario[j].Item2 + ' ' + estado_horas + "  " + modalidad);
+                    }
+                    Console.WriteLine("_____________________________________");
+                }
+                    validar = validar_insercion(horario, id_seccion, horas, i == 0 ? 1 : estado_horas, modalidad, dia1, dia2);
                 if (validar.First().Item1){
                     return validar.First().Item2;
                 }
@@ -145,14 +187,15 @@ namespace Autohorario
                 hora_fin = int.Parse(horario[i].Item1.Substring(3, 2));
                 if (estado_horas == 3)
                 {
+                    int inicio_random = 0, fin_random = 0;
                     if ((hora_fin - hora_inicio) >= horas && horario[i].Item2 != dia1 && horario[i].Item2 != dia2)
                     {
                         do
                         {
-                            hora_inicio = random.Next(hora_inicio, hora_fin);
-                            hora_fin = random.Next(hora_inicio, hora_fin + 1);
-                        } while (hora_fin - hora_inicio < horas);
-                        insertar(horario[i].Item2, id_seccion, estado_horas, modalidad, $"{zero(hora_inicio)}/{zero(hora_inicio + horas)}");
+                            inicio_random = random.Next(hora_inicio,hora_fin);
+                            fin_random = random.Next(inicio_random, hora_fin + 1);
+                        } while (fin_random - inicio_random < horas);
+                        insertar(horario[i].Item2, id_seccion, estado_horas, modalidad, $"{zero(inicio_random)}/{zero(inicio_random + horas)}");
                         validar_insercion[0] = (true, horario[i].Item2);
                         return validar_insercion;
                     }
@@ -199,7 +242,6 @@ namespace Autohorario
                 cmd.ExecuteNonQuery();
             }
         }
-
         public static string zero(int hora)
         {
             return hora < 10 ? "0" + hora : hora.ToString();
