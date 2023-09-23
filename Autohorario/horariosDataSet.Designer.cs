@@ -2473,7 +2473,7 @@ namespace Autohorario {
             
             private global::System.Data.DataColumn columnid_hora;
             
-            private global::System.Data.DataColumn columnhoras;
+            private global::System.Data.DataColumn columnHours;
             
             private global::System.Data.DataColumn columnid_dia;
             
@@ -2522,9 +2522,9 @@ namespace Autohorario {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn horasColumn {
+            public global::System.Data.DataColumn HoursColumn {
                 get {
-                    return this.columnhoras;
+                    return this.columnHours;
                 }
             }
             
@@ -2581,11 +2581,11 @@ namespace Autohorario {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public horarioRow AddhorarioRow(string horas, diaRow _parentdiaRowByhorario_fk_Hora_Dia1, seccionRow _parentseccionRowByhorario_fk_Hora_Seccion1) {
+            public horarioRow AddhorarioRow(string Hours, diaRow _parentdiaRowByhorario_fk_Hora_Dia1, seccionRow _parentseccionRowByhorario_fk_Hora_Seccion1) {
                 horarioRow rowhorarioRow = ((horarioRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         null,
-                        horas,
+                        Hours,
                         null,
                         null};
                 if ((_parentdiaRowByhorario_fk_Hora_Dia1 != null)) {
@@ -2624,7 +2624,7 @@ namespace Autohorario {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             internal void InitVars() {
                 this.columnid_hora = base.Columns["id_hora"];
-                this.columnhoras = base.Columns["horas"];
+                this.columnHours = base.Columns["Hours"];
                 this.columnid_dia = base.Columns["id_dia"];
                 this.columnid_seccion = base.Columns["id_seccion"];
             }
@@ -2634,8 +2634,8 @@ namespace Autohorario {
             private void InitClass() {
                 this.columnid_hora = new global::System.Data.DataColumn("id_hora", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnid_hora);
-                this.columnhoras = new global::System.Data.DataColumn("horas", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnhoras);
+                this.columnHours = new global::System.Data.DataColumn("Hours", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnHours);
                 this.columnid_dia = new global::System.Data.DataColumn("id_dia", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnid_dia);
                 this.columnid_seccion = new global::System.Data.DataColumn("id_seccion", typeof(int), null, global::System.Data.MappingType.Element);
@@ -2648,8 +2648,8 @@ namespace Autohorario {
                 this.columnid_hora.AllowDBNull = false;
                 this.columnid_hora.ReadOnly = true;
                 this.columnid_hora.Unique = true;
-                this.columnhoras.AllowDBNull = false;
-                this.columnhoras.MaxLength = 5;
+                this.columnHours.AllowDBNull = false;
+                this.columnHours.MaxLength = 5;
                 this.columnid_dia.AllowDBNull = false;
                 this.columnid_seccion.AllowDBNull = false;
             }
@@ -5328,7 +5328,7 @@ namespace Autohorario {
             
             private global::System.Data.DataColumn columncodigo_seccion;
             
-            private global::System.Data.DataColumn columnhoras;
+            private global::System.Data.DataColumn columnHours;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
@@ -5397,9 +5397,9 @@ namespace Autohorario {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn horasColumn {
+            public global::System.Data.DataColumn HoursColumn {
                 get {
-                    return this.columnhoras;
+                    return this.columnHours;
                 }
             }
             
@@ -5440,14 +5440,14 @@ namespace Autohorario {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public horario_profesorRow Addhorario_profesorRow(string codigo_carrera, string nombre_dia, string nombre_asignatura, int codigo_seccion, string horas) {
+            public horario_profesorRow Addhorario_profesorRow(string codigo_carrera, string nombre_dia, string nombre_asignatura, int codigo_seccion, string Hours) {
                 horario_profesorRow rowhorario_profesorRow = ((horario_profesorRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         codigo_carrera,
                         nombre_dia,
                         nombre_asignatura,
                         codigo_seccion,
-                        horas};
+                        Hours};
                 rowhorario_profesorRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowhorario_profesorRow);
                 return rowhorario_profesorRow;
@@ -5474,7 +5474,7 @@ namespace Autohorario {
                 this.columnnombre_dia = base.Columns["nombre_dia"];
                 this.columnnombre_asignatura = base.Columns["nombre_asignatura"];
                 this.columncodigo_seccion = base.Columns["codigo_seccion"];
-                this.columnhoras = base.Columns["horas"];
+                this.columnHours = base.Columns["Hours"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -5488,8 +5488,8 @@ namespace Autohorario {
                 base.Columns.Add(this.columnnombre_asignatura);
                 this.columncodigo_seccion = new global::System.Data.DataColumn("codigo_seccion", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columncodigo_seccion);
-                this.columnhoras = new global::System.Data.DataColumn("horas", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnhoras);
+                this.columnHours = new global::System.Data.DataColumn("Hours", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnHours);
                 this.columncodigo_carrera.AllowDBNull = false;
                 this.columncodigo_carrera.MaxLength = 6;
                 this.columnnombre_dia.AllowDBNull = false;
@@ -5497,8 +5497,8 @@ namespace Autohorario {
                 this.columnnombre_asignatura.AllowDBNull = false;
                 this.columnnombre_asignatura.MaxLength = 100;
                 this.columncodigo_seccion.AllowDBNull = false;
-                this.columnhoras.AllowDBNull = false;
-                this.columnhoras.MaxLength = 5;
+                this.columnHours.AllowDBNull = false;
+                this.columnHours.MaxLength = 5;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -6420,12 +6420,12 @@ namespace Autohorario {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string horas {
+            public string Hours {
                 get {
-                    return ((string)(this[this.tablehorario.horasColumn]));
+                    return ((string)(this[this.tablehorario.HoursColumn]));
                 }
                 set {
-                    this[this.tablehorario.horasColumn] = value;
+                    this[this.tablehorario.HoursColumn] = value;
                 }
             }
             
@@ -7353,12 +7353,12 @@ namespace Autohorario {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string horas {
+            public string Hours {
                 get {
-                    return ((string)(this[this.tablehorario_profesor.horasColumn]));
+                    return ((string)(this[this.tablehorario_profesor.HoursColumn]));
                 }
                 set {
-                    this[this.tablehorario_profesor.horasColumn] = value;
+                    this[this.tablehorario_profesor.HoursColumn] = value;
                 }
             }
         }
@@ -9849,39 +9849,39 @@ SELECT id_creditos_requisitos_asignatura, id_version_pensum, codigo_carrera, cod
             tableMapping.SourceTable = "Table";
             tableMapping.DataSetTable = "horario";
             tableMapping.ColumnMappings.Add("id_hora", "id_hora");
-            tableMapping.ColumnMappings.Add("horas", "horas");
+            tableMapping.ColumnMappings.Add("Hours", "Hours");
             tableMapping.ColumnMappings.Add("id_dia", "id_dia");
             tableMapping.ColumnMappings.Add("id_seccion", "id_seccion");
             this._adapter.TableMappings.Add(tableMapping);
             this._adapter.DeleteCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.DeleteCommand.Connection = this.Connection;
             this._adapter.DeleteCommand.CommandText = "DELETE FROM [horarios].[horario] WHERE (([id_hora] = @Original_id_hora) AND ([hor" +
-                "as] = @Original_horas) AND ([id_dia] = @Original_id_dia) AND ([id_seccion] = @Or" +
+                "as] = @Original_Hours) AND ([id_dia] = @Original_id_dia) AND ([id_seccion] = @Or" +
                 "iginal_id_seccion))";
             this._adapter.DeleteCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_id_hora", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "id_hora", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
-            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_horas", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "horas", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
+            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_Hours", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Hours", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_id_dia", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "id_dia", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_id_seccion", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "id_seccion", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.InsertCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.InsertCommand.Connection = this.Connection;
-            this._adapter.InsertCommand.CommandText = "INSERT INTO [horarios].[horario] ([horas], [id_dia], [id_seccion]) VALUES (@horas" +
-                ", @id_dia, @id_seccion);\r\nSELECT id_hora, horas, id_dia, id_seccion FROM horario" +
+            this._adapter.InsertCommand.CommandText = "INSERT INTO [horarios].[horario] ([Hours], [id_dia], [id_seccion]) VALUES (@Hours" +
+                ", @id_dia, @id_seccion);\r\nSELECT id_hora, Hours, id_dia, id_seccion FROM horario" +
                 "s.horario WHERE (id_hora = SCOPE_IDENTITY())";
             this._adapter.InsertCommand.CommandType = global::System.Data.CommandType.Text;
-            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@horas", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "horas", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Hours", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Hours", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@id_dia", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "id_dia", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@id_seccion", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "id_seccion", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.UpdateCommand.Connection = this.Connection;
-            this._adapter.UpdateCommand.CommandText = @"UPDATE [horarios].[horario] SET [horas] = @horas, [id_dia] = @id_dia, [id_seccion] = @id_seccion WHERE (([id_hora] = @Original_id_hora) AND ([horas] = @Original_horas) AND ([id_dia] = @Original_id_dia) AND ([id_seccion] = @Original_id_seccion));
-SELECT id_hora, horas, id_dia, id_seccion FROM horarios.horario WHERE (id_hora = @id_hora)";
+            this._adapter.UpdateCommand.CommandText = @"UPDATE [horarios].[horario] SET [Hours] = @Hours, [id_dia] = @id_dia, [id_seccion] = @id_seccion WHERE (([id_hora] = @Original_id_hora) AND ([Hours] = @Original_Hours) AND ([id_dia] = @Original_id_dia) AND ([id_seccion] = @Original_id_seccion));
+SELECT id_hora, Hours, id_dia, id_seccion FROM horarios.horario WHERE (id_hora = @id_hora)";
             this._adapter.UpdateCommand.CommandType = global::System.Data.CommandType.Text;
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@horas", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "horas", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Hours", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Hours", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@id_dia", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "id_dia", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@id_seccion", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "id_seccion", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_id_hora", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "id_hora", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_horas", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "horas", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_Hours", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Hours", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_id_dia", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "id_dia", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_id_seccion", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "id_seccion", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@id_hora", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "id_hora", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
@@ -9900,7 +9900,7 @@ SELECT id_hora, horas, id_dia, id_seccion FROM horarios.horario WHERE (id_hora =
             this._commandCollection = new global::System.Data.SqlClient.SqlCommand[1];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = "SELECT id_hora, horas, id_dia, id_seccion FROM horarios.horario";
+            this._commandCollection[0].CommandText = "SELECT id_hora, Hours, id_dia, id_seccion FROM horarios.horario";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
         }
         
@@ -9961,13 +9961,13 @@ SELECT id_hora, horas, id_dia, id_seccion FROM horarios.horario WHERE (id_hora =
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Delete, true)]
-        public virtual int Delete(int Original_id_hora, string Original_horas, int Original_id_dia, int Original_id_seccion) {
+        public virtual int Delete(int Original_id_hora, string Original_Hours, int Original_id_dia, int Original_id_seccion) {
             this.Adapter.DeleteCommand.Parameters[0].Value = ((int)(Original_id_hora));
-            if ((Original_horas == null)) {
-                throw new global::System.ArgumentNullException("Original_horas");
+            if ((Original_Hours == null)) {
+                throw new global::System.ArgumentNullException("Original_Hours");
             }
             else {
-                this.Adapter.DeleteCommand.Parameters[1].Value = ((string)(Original_horas));
+                this.Adapter.DeleteCommand.Parameters[1].Value = ((string)(Original_Hours));
             }
             this.Adapter.DeleteCommand.Parameters[2].Value = ((int)(Original_id_dia));
             this.Adapter.DeleteCommand.Parameters[3].Value = ((int)(Original_id_seccion));
@@ -9991,12 +9991,12 @@ SELECT id_hora, horas, id_dia, id_seccion FROM horarios.horario WHERE (id_hora =
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Insert, true)]
-        public virtual int Insert(string horas, int id_dia, int id_seccion) {
-            if ((horas == null)) {
-                throw new global::System.ArgumentNullException("horas");
+        public virtual int Insert(string Hours, int id_dia, int id_seccion) {
+            if ((Hours == null)) {
+                throw new global::System.ArgumentNullException("Hours");
             }
             else {
-                this.Adapter.InsertCommand.Parameters[0].Value = ((string)(horas));
+                this.Adapter.InsertCommand.Parameters[0].Value = ((string)(Hours));
             }
             this.Adapter.InsertCommand.Parameters[1].Value = ((int)(id_dia));
             this.Adapter.InsertCommand.Parameters[2].Value = ((int)(id_seccion));
@@ -10020,21 +10020,21 @@ SELECT id_hora, horas, id_dia, id_seccion FROM horarios.horario WHERE (id_hora =
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
-        public virtual int Update(string horas, int id_dia, int id_seccion, int Original_id_hora, string Original_horas, int Original_id_dia, int Original_id_seccion, int id_hora) {
-            if ((horas == null)) {
-                throw new global::System.ArgumentNullException("horas");
+        public virtual int Update(string Hours, int id_dia, int id_seccion, int Original_id_hora, string Original_Hours, int Original_id_dia, int Original_id_seccion, int id_hora) {
+            if ((Hours == null)) {
+                throw new global::System.ArgumentNullException("Hours");
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[0].Value = ((string)(horas));
+                this.Adapter.UpdateCommand.Parameters[0].Value = ((string)(Hours));
             }
             this.Adapter.UpdateCommand.Parameters[1].Value = ((int)(id_dia));
             this.Adapter.UpdateCommand.Parameters[2].Value = ((int)(id_seccion));
             this.Adapter.UpdateCommand.Parameters[3].Value = ((int)(Original_id_hora));
-            if ((Original_horas == null)) {
-                throw new global::System.ArgumentNullException("Original_horas");
+            if ((Original_Hours == null)) {
+                throw new global::System.ArgumentNullException("Original_Hours");
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[4].Value = ((string)(Original_horas));
+                this.Adapter.UpdateCommand.Parameters[4].Value = ((string)(Original_Hours));
             }
             this.Adapter.UpdateCommand.Parameters[5].Value = ((int)(Original_id_dia));
             this.Adapter.UpdateCommand.Parameters[6].Value = ((int)(Original_id_seccion));
@@ -10059,8 +10059,8 @@ SELECT id_hora, horas, id_dia, id_seccion FROM horarios.horario WHERE (id_hora =
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
-        public virtual int Update(string horas, int id_dia, int id_seccion, int Original_id_hora, string Original_horas, int Original_id_dia, int Original_id_seccion) {
-            return this.Update(horas, id_dia, id_seccion, Original_id_hora, Original_horas, Original_id_dia, Original_id_seccion, Original_id_hora);
+        public virtual int Update(string Hours, int id_dia, int id_seccion, int Original_id_hora, string Original_Hours, int Original_id_dia, int Original_id_seccion) {
+            return this.Update(Hours, id_dia, id_seccion, Original_id_hora, Original_Hours, Original_id_dia, Original_id_seccion, Original_id_hora);
         }
     }
     
@@ -13051,7 +13051,7 @@ SELECT id_version_pensum, año_pensum FROM horarios.version_pensum WHERE (id_ver
             tableMapping.ColumnMappings.Add("nombre_dia", "nombre_dia");
             tableMapping.ColumnMappings.Add("nombre_asignatura", "nombre_asignatura");
             tableMapping.ColumnMappings.Add("codigo_seccion", "codigo_seccion");
-            tableMapping.ColumnMappings.Add("horas", "horas");
+            tableMapping.ColumnMappings.Add("Hours", "Hours");
             this._adapter.TableMappings.Add(tableMapping);
         }
         

@@ -15,7 +15,7 @@ namespace Autohorario
         internal static SqlConnection Con = new SqlConnection(ConfigurationManager.ConnectionStrings["horarioConexion"].ConnectionString);
         static void Main(string[] args)
         {
-            Console.WriteLine(Run());
+            Console.WriteLine("Milisegundos: " + Run());
         }
         public static int Run()
         {
@@ -47,7 +47,6 @@ namespace Autohorario
 
             Con.Close();
             stopwatch.Stop();
-            Console.WriteLine("Tiempo transcurrido: {0} ms", stopwatch.ElapsedMilliseconds);
             return int.Parse(stopwatch.ElapsedMilliseconds.ToString());
         }
         private static List<Hours> GetSelectSchedule(int ProfessorId, int Modality)
